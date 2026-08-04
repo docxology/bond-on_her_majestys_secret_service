@@ -1,1 +1,1 @@
-"""Thin orchestrator scripts for on_her_majestys_secret_service."""
+# PIZ GLORIA mission-phase CLIs (thin orchestrators).

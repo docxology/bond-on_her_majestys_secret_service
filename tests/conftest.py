@@ -1,19 +1,18 @@
-"""Pytest configuration for on_her_majestys_secret_service tests."""
+"""Shared pytest configuration for PIZ GLORIA.
+
+Adds ``src/`` to ``sys.path`` so project modules import without installation,
+and pins matplotlib to the non-interactive Agg backend so figure tests never
+open display windows (deterministic, headless).
+"""
+
+from __future__ import annotations
 
 import os
 import sys
+from pathlib import Path
 
-# Force headless backend for matplotlib in tests
 os.environ.setdefault("MPLBACKEND", "Agg")
 
-# Add src/ AND the repo root to path so the documented per-project pytest command
-# works from a clean environment. The project pyproject's `pythonpath` is
-# project-relative and omits the repo root, so without this the suite cannot import
-# `infrastructure` (tests collect-error). The project lives at
-# projects/templates/<name>/, so the repo root is three levels above ROOT.
-ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-SRC = os.path.join(ROOT, "src")
-REPO_ROOT = os.path.abspath(os.path.join(ROOT, "..", "..", ".."))
-for _path in (REPO_ROOT, SRC):
-    if _path not in sys.path:
-        sys.path.insert(0, _path)
+SRC = Path(__file__).resolve().parents[1] / "src"
+if str(SRC) not in sys.path:
+    sys.path.insert(0, str(SRC))

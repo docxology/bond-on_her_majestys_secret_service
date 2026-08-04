@@ -1,10 +1,9 @@
-# References {#sec:references}
+# References
 
-Bibliography lives in [`manuscript/references.bib`](references.bib) and is read by Pandoc during PDF render. The build pipeline invokes Pandoc with `--natbib`, so every `[@key]` citation in the manuscript is rewritten to the appropriate `\cite{}`/`\citep{}`/`\citet{}` LaTeX command and resolved against the bib file.
-
-To validate that `references.bib` is syntactically clean and contains the required fields per entry type:
-
-```bash
-uv run python -m infrastructure.reference.citation.cli validate \
-    projects/working/bond/on_her_majestys_secret_service/manuscript/references.bib --strict
-```
+1. Arya, S. P. *Air Pollution Meteorology and Dispersion*. Oxford University
+   Press, 1999.
+2. Turner, D. B. *Workbook of Atmospheric Dispersion Estimates*. U.S.
+   Environmental Protection Agency, 1970.
+3. Beychok, M. R. *Fundamentals of Stack Gas Dispersion*. 4th ed., 2005.
+4. Cormen, T., Leiserson, C., Rivest, R., Stein, C. *Introduction to
+   Algorithms* (Dijkstra's algorithm). MIT Press, 2009.

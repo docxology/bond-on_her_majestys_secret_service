@@ -1,5 +1,42 @@
-# Code-centric exemplar: optional monorepo adapters only.
-allow_infrastructure_imports:
-  - src/analysis/_infra.py
-  - src/_runtime.py
-  - src/benchmark_support.py
+# Layer contract — PIZ GLORIA (on_her_majestys_secret_service)
+
+layers:
+  domain:
+    modules:
+      - "src/on_her_majestys_secret_service/dispersion_model.py"
+      - "src/on_her_majestys_secret_service/alpine_routes.py"
+      - "src/on_her_majestys_secret_service/cover_identity.py"
+    rules:
+      - "pure math only"
+      - "no bond_api imports"
+      - "no infrastructure imports"
+      - "no I/O"
+      - "deterministic; importable standalone"
+
+  adapter:
+    modules:
+      - "src/on_her_majestys_secret_service/mission.py"
+    rules:
+      - "thin bridge to the frozen bond_api protocol"
+      - "may import domain modules and bond_api only"
+      - "deterministic provenance required"
+
+  presentation:
+    modules:
+      - "src/on_her_majestys_secret_service/manuscript_variables.py"
+      - "src/on_her_majestys_secret_service/figures/"
+    rules:
+      - "derive from domain / protocol"
+      - "may perform explicit file I/O"
+
+  orchestrators:
+    modules:
+      - "scripts/"
+    rules:
+      - "thin CLIs; delegate to src/"
+      - "sys.path bootstrap only"
+
+enforcement:
+  - "no-mock scan over src/ and tests/"
+  - "ruff + mypy clean on src/ and scripts/"
+  - ">=90% line+branch coverage on src/"

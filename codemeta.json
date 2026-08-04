@@ -1,31 +1,38 @@
 {
+  "$schema": "https://codemeta.github.io/schema",
   "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
-  "@type": "SoftwareSourceCode",
+  "type": "SoftwareSourceCode",
+  "name": "on_her_majestys_secret_service",
+  "description": "PROJECT BOND film package (mission codename PIZ GLORIA): aerosol bioweapon dispersion, bobsleigh-grade alpine route planning, and Bray cover-identity risk scoring against the frozen bond_api MissionProvider protocol.",
+  "license": "https://spdx.org/licenses/MIT",
+  "version": "0.1.0",
+  "dateCreated": "2026-08-04",
   "author": [
     {
-      "@id": "https://orcid.org/0000-0001-6232-9096",
       "@type": "Person",
-      "affiliation": {
-        "@type": "Organization",
-        "name": "Active Inference Institute"
-      },
+      "givenName": "Daniel Ari",
       "familyName": "Friedman",
-      "givenName": "Daniel Ari"
+      "identifier": "https://orcid.org/0000-0001-6232-9096",
+      "affiliation": "Active Inference Institute"
     }
   ],
-  "codeRepository": "https://github.com/docxology/on_her_majestys_secret_service",
-  "dateModified": "2026-07-10",
-  "identifier": "10.5281/zenodo.20417136",
+  "programmingLanguage": {
+    "@type": "ComputerLanguage",
+    "name": "Python"
+  },
   "keywords": [
-    "optimization algorithms",
-    "gradient descent",
-    "convergence analysis",
-    "numerical methods",
-    "mathematical programming",
-    "reproducible research",
-    "infrastructure automation"
+    "aerosol bioweapon dispersion",
+    "Gaussian plume model",
+    "alpine route planning",
+    "slope safety",
+    "cover-identity risk scoring",
+    "reproducible research"
   ],
-  "license": "https://spdx.org/licenses/MIT",
-  "name": "Convergence Analysis of Gradient Descent Optimization",
-  "version": "2.5.2"
+  "softwareRequirements": [
+    "numpy",
+    "matplotlib",
+    "pyyaml",
+    "bond-api"
+  ],
+  "codeRepository": "https://github.com/docxology/on_her_majestys_secret_service"
 }

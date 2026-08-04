@@ -1,57 +1,43 @@
+# Claim ledger — PIZ GLORIA (on_her_majestys_secret_service)
+# Registers sourced numeric/parametric claims for evidence-registry validation.
+
 claims:
-  - claim_id: figure-export-dpi
-    kind: number
-    value: 300
-    source: projects/working/bond/on_her_majestys_secret_service/src/viz_config.py plotting defaults (dpi)
-    source_tier: project_source
-    freshness: active
-    artifact_path: output/figures/convergence_plot.png
-  - claim_id: step-size-sensitivity-cap
-    kind: number
-    value: 500
-    source: projects/working/bond/on_her_majestys_secret_service/src/sweeps.py sensitivity_sweep max_iter cap
-    source_tier: generated_metric
-    freshness: active
-    artifact_path: output/figures/step_size_sensitivity.png
-  - claim_id: stability-log-lower
-    kind: number
-    value: -6
-    source: projects/working/bond/on_her_majestys_secret_service/src/figures/scientific_stability.py stability visualization caption
-    source_tier: project_source
-    freshness: active
-    artifact_path: output/figures/stability_analysis.png
-  - claim_id: solution-relative-error-exponent
-    kind: number
-    value: -4
-    source: projects/working/bond/on_her_majestys_secret_service/manuscript/03_results.md stated precision threshold
-    source_tier: manuscript_claim
-    freshness: active
-    artifact_path: manuscript/03_results.md
-  - claim_id: stability-log-upper
-    kind: number
-    value: -9
-    source: projects/working/bond/on_her_majestys_secret_service/src/figures/scientific_stability.py stability visualization caption
-    source_tier: project_source
-    freshness: active
-    artifact_path: output/figures/stability_analysis.png
-  - claim_id: benchmark-tolerance-exponent
-    kind: number
-    value: -10
-    source: projects/working/bond/on_her_majestys_secret_service/scripts/optimization_analysis.py dimensional benchmark tolerance
-    source_tier: project_source
-    freshness: active
-    artifact_path: output/figures/performance_benchmark.png
-  - claim_id: benchmark-min-iterations
-    kind: number
-    value: 219
-    source: projects/working/bond/on_her_majestys_secret_service/manuscript/03_results.md benchmark caption
-    source_tier: manuscript_claim
-    freshness: active
-    artifact_path: output/figures/performance_benchmark.png
-  - claim_id: benchmark-max-iterations
-    kind: number
-    value: 238
-    source: projects/working/bond/on_her_majestys_secret_service/manuscript/03_results.md benchmark caption
-    source_tier: manuscript_claim
-    freshness: active
-    artifact_path: output/figures/performance_benchmark.png
+  - id: "pg-dispersion-peak"
+    statement: "Peak ground-level centreline concentration of the configured release"
+    source: "src/on_her_majestys_secret_service/mission.py::run_scenario"
+    derivation: "Gaussian plume model, computed"
+    verifiable: true
+  - id: "pg-isopleth-reach"
+    statement: "Far-edge down-valley reach of the 1e-7 kg/m3 hazard isopleth"
+    source: "src/on_her_majestys_secret_service/mission.py::run_scenario"
+    derivation: "isopleth_distance bisection, computed"
+    verifiable: true
+  - id: "pg-route-safe"
+    statement: "Planned alpine exfiltration route safe under the slope gate"
+    source: "src/on_her_majestys_secret_service/mission.py::run_scenario"
+    derivation: "Dijkstra slope-gated planner over analytic terrain"
+    verifiable: true
+  - id: "pg-bray-cover"
+    statement: "Bray persona aggregate cover-risk score and verdict"
+    source: "src/on_her_majestys_secret_service/mission.py::run_scenario"
+    derivation: "weighted additive risk model, computed"
+    verifiable: true
+
+model_parameters:
+  release_rate_kg_s: 0.05
+  wind_speed_m_s: 4.0
+  release_height_m: 25.0
+  stability_class: "C"
+  valley_depth_m: 400.0
+  floor_wind_ratio: 0.6
+  isopleth_threshold_kg_m3: 1.0e-7
+  route_max_slope_deg: 30.0
+  route_grid: 40
+  cover_weights:
+    documentation: 0.25
+    linguistic_fit: 0.20
+    behavioural_consistency: 0.15
+    social_footprint: 0.15
+    forensic_overlap: 0.10
+    physiognomy: 0.08
+    pecuniary_consistency: 0.07

@@ -1,30 +1,23 @@
 {
+  "title": "On Her Majesty's Secret Service: PIZ GLORIA — Special-Agent Mission Software",
+  "description": "PROJECT BOND film package (mission codename PIZ GLORIA): aerosol bioweapon dispersion, bobsleigh-grade alpine route planning, and Bray cover-identity risk scoring, implemented against the frozen bond_api MissionProvider protocol.",
   "creators": [
     {
-      "affiliation": "Active Inference Institute",
       "name": "Friedman, Daniel Ari",
-      "orcid": "0000-0001-6232-9096"
+      "orcid": "0000-0001-6232-9096",
+      "affiliation": "Active Inference Institute"
     }
   ],
-  "description": "Source code for Convergence Analysis of Gradient Descent Optimization (2026).",
   "keywords": [
-    "optimization algorithms",
-    "gradient descent",
-    "convergence analysis",
-    "numerical methods",
-    "mathematical programming",
-    "reproducible research",
-    "infrastructure automation"
+    "aerosol bioweapon dispersion",
+    "Gaussian plume model",
+    "alpine route planning",
+    "slope safety",
+    "cover-identity risk scoring",
+    "reproducible research"
   ],
   "license": "MIT",
-  "related_identifiers": [
-    {
-      "identifier": "10.5281/zenodo.20417136",
-      "relation": "isVersionOf",
-      "scheme": "doi"
-    }
-  ],
-  "title": "Convergence Analysis of Gradient Descent Optimization",
   "upload_type": "software",
-  "version": "2.5.2"
+  "access_right": "restricted",
+  "version": "0.1.0"
 }

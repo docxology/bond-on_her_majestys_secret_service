@@ -1,25 +1,39 @@
+# Experiment plan — PIZ GLORIA (on_her_majestys_secret_service)
+
+mission:
+  codename: "PIZ GLORIA"
+  film: "On Her Majesty's Secret Service (1969)"
+
 conditions:
-  - name: conservative_step
-    role: reference
-    description: "Stable gradient-descent step below the spectral bound."
-  - name: near_optimal_step
-    role: proposed
-    description: "Template-recommended step near the stable convergence region."
-  - name: aggressive_step
-    role: variant
-    description: "Stress condition near or above the stability boundary."
-metrics:
-  primary:
-    name: objective_value
-    direction: minimize
-protocol: "Run the deterministic quadratic optimization sweep with identical initialization, seeds, tolerance, and iteration cap across all declared step-size conditions."
-expected_figures:
-  - fig:convergence_plot
-  - fig:performance_benchmark
-  - fig:step_size_sensitivity
-expected_tables:
-  - tbl:optimization_results
-baselines:
-  - conservative_step
-ablations:
-  - aggressive_step
+  - "aerosol bioweapon release in an alpine valley (Gaussian plume)"
+  - "bobsleigh-grade alpine route under a slope-safety gate (Dijkstra)"
+  - "Bray cover identity under weighted evidence-based risk scoring"
+
+primary_metric:
+  name: "deterministic mission outcome (success + provenance)"
+  submetrics:
+    - "isopleth reach (m)"
+    - "route distance (m), mean grade (deg), safe flag"
+    - "Bray cover score + verdict"
+
+expected_outputs:
+  figures:
+    - "output/figures/aerosol_plume.png"
+  data:
+    - "output/data/piz_gloria_outcome.json"
+    - "output/data/manuscript_variables.json"
+  manuscript:
+    - "manuscript/config.yaml -> {{TOKEN}} hydration"
+
+conditions_fixed:
+  seed: 7
+  release_rate_kg_s: 0.05
+  wind_speed_m_s: 4.0
+  release_height_m: 25.0
+  stability: "C"
+  valley_depth_m: 400.0
+  isopleth_threshold_kg_m3: 1.0e-7
+  route_max_slope_deg: 30.0
+
+baseline: []
+ablation: []

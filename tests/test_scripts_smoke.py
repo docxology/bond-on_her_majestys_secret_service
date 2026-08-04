@@ -1,4 +1,9 @@
-"""Smoke tests for auxiliary pipeline scripts (non-gated)."""
+"""Subprocess smoke tests for the thin mission-phase CLIs.
+
+Each phase CLI is invoked as a real subprocess (``sys.executable``) from the
+project root and must exit 0 (or a documented code) with the expected stdout /
+artifact side effects. No mocks: these are the actual scripts.
+"""
 
 from __future__ import annotations
 
@@ -6,65 +11,96 @@ import subprocess
 import sys
 from pathlib import Path
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+ROOT = Path(__file__).resolve().parents[1]
+SCRIPTS = ROOT / "scripts"
 
 
-def test_generate_api_docs_writes_reference() -> None:
-    """generate_api_docs.py is aesthetic-only but should run without error."""
-    script = PROJECT_ROOT / "scripts" / "generate_api_docs.py"
-    result = subprocess.run(
-        [sys.executable, str(script)],
-        cwd=PROJECT_ROOT,
+def _run(name: str, *args: str, cwd: Path = ROOT) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        [sys.executable, str(SCRIPTS / name), *args],
         capture_output=True,
         text=True,
-        timeout=120,
+        cwd=cwd,
         check=False,
     )
-    assert result.returncode == 0, result.stderr or result.stdout
-    api_ref = PROJECT_ROOT / "output" / "docs" / "api_reference.md"
-    assert api_ref.is_file()
-    body = api_ref.read_text(encoding="utf-8")
-    assert "gradient_descent" in body.lower()
 
 
-def test_preflight_script_emits_diagnostics() -> None:
-    """00_preflight.py is aesthetic-only; exit 0 when no render mermaid, exit 1 when chrome absent."""
-    script = PROJECT_ROOT / "scripts" / "00_preflight.py"
-    result = subprocess.run(
-        [sys.executable, str(script)],
-        cwd=PROJECT_ROOT,
-        capture_output=True,
-        text=True,
-        timeout=120,
-        check=False,
-    )
-    assert result.returncode in (0, 1), result.stderr or result.stdout
-    combined = f"{result.stdout}\n{result.stderr}".lower()
-    if result.returncode == 1:
-        assert any(token in combined for token in ("preflight", "puppeteer", "mmdc"))
+class TestPhaseCLIs:
+    def test_preflight(self) -> None:
+        result = _run("00_preflight.py")
+        assert result.returncode == 0
+        assert "PIZ GLORIA" in result.stdout
+
+    def test_brief(self) -> None:
+        result = _run("01_brief.py")
+        assert result.returncode == 0
+        assert "Objectives (3)" in result.stdout
+
+    def test_recon_with_default_goal(self) -> None:
+        result = _run("02_recon.py")
+        assert result.returncode == 0
+        assert "Findings (4)" in result.stdout
+
+    def test_recon_with_custom_goal(self) -> None:
+        result = _run("02_recon.py", "map", "the", "valley")
+        assert result.returncode == 0
+        assert "map the valley" in result.stdout
+
+    def test_plan(self) -> None:
+        result = _run("03_plan.py")
+        assert result.returncode == 0
+        assert "dispersion" in result.stdout
+        assert "alpine" in result.stdout
+        assert "cover" in result.stdout
+
+    def test_execute_writes_outcome_and_figure(self, tmp_path: Path) -> None:
+        result = _run("04_execute.py")
+        assert result.returncode == 0
+        assert "Mission success: True" in result.stdout
+        assert (ROOT / "output" / "data" / "piz_gloria_outcome.json").exists()
+        assert (ROOT / "output" / "figures" / "aerosol_plume.png").exists()
+
+    def test_debrief(self) -> None:
+        result = _run("05_debrief.py")
+        assert result.returncode == 0
+        assert "Lessons (3)" in result.stdout
 
 
-def test_run_api_doc_generation_continues_when_glossary_index_fails(tmp_path: Path) -> None:
-    """Glossary index failure is logged; static api_reference.md still written."""
-    repo_root = PROJECT_ROOT.parent.parent
-    src_path = str(PROJECT_ROOT / "src")
-    for path in (str(repo_root), src_path):
-        if path not in sys.path:
-            sys.path.insert(0, path)
+class TestManuscriptCLI:
+    def test_z_generate_strict(self) -> None:
+        result = _run("z_generate_manuscript_variables.py")
+        assert result.returncode == 0
+        assert (ROOT / "output" / "data" / "manuscript_variables.json").exists()
 
-    scripts_dir = str(PROJECT_ROOT / "scripts")
-    if scripts_dir not in sys.path:
-        sys.path.insert(0, scripts_dir)
-    import generate_api_docs as api_docs_mod
+    def test_z_generate_allow_draft(self) -> None:
+        result = _run("z_generate_manuscript_variables.py", "--allow-draft")
+        assert result.returncode == 0
 
-    def _fail(_src: str) -> list:
-        raise ValueError("glossary index unavailable")
+    def test_manuscript_variables_json_is_well_formed(self) -> None:
+        import json
 
-    project_root = tmp_path
-    (project_root / "src").mkdir()
-    result = api_docs_mod.run_api_doc_generation(project_root, api_index_builder=_fail)
-    assert result is not None
-    api_ref = project_root / "output" / "docs" / "api_reference.md"
-    assert api_ref.is_file()
-    assert result["glossary"] is None
-    assert result["api_reference"] == str(api_ref)
+        path = ROOT / "output" / "data" / "manuscript_variables.json"
+        data = json.loads(path.read_text(encoding="utf-8"))
+        assert data["BOND_CODENAME"] == "PIZ GLORIA"
+
+
+def test_no_mock_imports_in_tests() -> None:
+    """Guardrail: no mock framework anywhere in the source or test tree."""
+    # Construct forbidden tokens from parts so this file's own source cannot
+    # contain the literal strings (avoids tripping its own gate).
+    forbidden = [
+        "".join(parts)
+        for parts in [
+            ("unittest", ".mock"),
+            ("Magic", "Mock"),
+            ("mocker", ".patch"),
+            ("create", "autospec"),
+            ("@", "patch"),
+        ]
+    ]
+    for root in (ROOT / "tests", ROOT / "src"):
+        for path in root.rglob("*.py"):
+            text = path.read_text(encoding="utf-8")
+            for token in forbidden:
+                assert token not in text, f"{path} uses {token}"

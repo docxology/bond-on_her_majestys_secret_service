@@ -1,11 +1,26 @@
-# Abstract {#sec:abstract}
+# Abstract
 
-This paper presents a convergence study of **fixed-step gradient descent** on a convex quadratic, framed as the computational exemplar of the [Research Project Template](https://github.com/docxology/template). The implementation lives in `projects/working/bond/on_her_majestys_secret_service/src/optimizer.py`; experiments and figures are orchestrated by `projects/working/bond/on_her_majestys_secret_service/scripts/optimization_analysis.py` and hydrated into the manuscript through `scripts/z_generate_manuscript_variables.py`, so tables and prose track `output/data/optimization_results.csv` after every pipeline run.
+{{BOND_TITLE}}.
 
-We evaluate {{CONFIG_NUM_STEP_SIZES}} step sizes from $\alpha = {{CONFIG_MIN_STEP_SIZE}}$ to $\alpha = {{CONFIG_MAX_STEP_SIZE}}$, spanning conservative, near-optimal, aggressive, and divergent regimes for a unit Hessian model. The build chain exercises template infrastructure end-to-end: scientific helpers (`infrastructure.scientific.stability`, `infrastructure.scientific.benchmarking`), validation, rendering (`infrastructure/rendering/pdf_renderer.py`), and reporting. Accessibility-oriented plotting defaults (colourblind-safe palette, 300 dpi exports) are centralized in `src/figures/` and `src/analysis/`.
+This report documents the deterministic mission software built for mission
+codename **{{BOND_CODENAME}}**, drawn from the film *{{BOND_FILM}}* (1969). The
+package delivers three quantitative analysis capabilities that an alpine
+reconnaissance and exfiltration operation requires:
 
-Contributions are **methodological** and **architectural**. On the methods side, we relate empirical iteration counts and error decay to the scalar contraction factor $\rho(\alpha) = |1-\alpha|$ and document cases where runs hit $N_{\max} = {{CONFIG_MAX_ITERATIONS}}$ before meeting the gradient tolerance. On the architecture side, we demonstrate a zero-mock test suite on project `src/` (see [test_optimizer.py](https://github.com/docxology/template/blob/main/projects/working/bond/on_her_majestys_secret_service/tests/test_optimizer.py)), automated six-figure analysis, and reproducibility metadata (configuration hash, artifact counts) injected into [@sec:reproducibility].
+1. **Aerosol dispersion modeling** — a steady-state Gaussian plume with
+   Pasquill-Gifford vertical mixing and valley-channeled transport, yielding
+   the down-valley reach of a hazardous airborne allergen isopleth: measured
+   here as **{{PIZ_ISOPLETH_REACH_M}}** at the configured release profile, with
+   a peak ground-level concentration of **{{PIZ_PEAK_CONCENTRATION}}** at
+   **{{PIZ_PEAK_DISTANCE_M}}** downwind.
+2. **Alpine route planning** — a bobsleigh-grade track planner that gates every
+   step on slope safety and minimizes a distance-plus-grade cost, producing a
+   **{{PIZ_ROUTE_SAFE}}** exfiltration line of **{{PIZ_ROUTE_DISTANCE_M}}** at a
+   mean grade of **{{PIZ_ROUTE_MEAN_GRADE_DEG}}**.
+3. **Cover-identity risk scoring** — a weighted model of the *Bray* persona's
+   exposure, scoring **{{PIZ_BRAY_SCORE}}** (**{{PIZ_BRAY_VERDICT}}** risk).
 
-**Results (this configuration):** {{RESULT_NUM_CONVERGED}} of {{CONFIG_NUM_STEP_SIZES}} grid points report `converged=True` in the CSV; non-convergent rows flag either slow progress at small $\alpha$ under the iteration cap or instability when $|1-\alpha| \geq 1$. The analytical minimizer remains $x^\ast = {{RESULT_OPTIMUM_X}}$ with $f(x^\ast) = {{RESULT_OPTIMUM_F}}$ for the configured $(A,b)$.
-
-**Keywords:** {{CONFIG_KEYWORDS}}
+Every number above flows through the manuscript-variable pipeline from the
+executed mission results; none is hand-authored in prose. The implementation
+is deterministic, mock-free, and covered well above the 90% branch-coverage
+gate on ``src/``.
