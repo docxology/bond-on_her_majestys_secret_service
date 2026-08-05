@@ -3,8 +3,10 @@
 A PROJECT BOND film package drawn from **On Her Majesty's Secret Service**
 (1969), mission codename **PIZ GLORIA**. It implements special-agent mission
 software for an alpine operation: modeling the aerosol bioweapon (allergen)
-dispersion threat, planning a bobsleigh-grade safe exfiltration route, and
-scoring the *Bray* cover identity.
+dispersion threat (steady plume *and* time-resolved puff arrival), planning and
+riding a bobsleigh-grade safe exfiltration line (slope safety, descent
+kinetics, banked-curve clearance), and holding the *Bray* cover identity
+(weighted risk scoring *and* timeline verification).
 
 The package implements the frozen `bond_api` `MissionProvider` protocol and is
 discoverable by any BOND coordinator by its slug
@@ -12,20 +14,26 @@ discoverable by any BOND coordinator by its slug
 
 ## What it does
 
-Three pure, deterministic, infrastructure-free domain modules:
+Six pure, deterministic, infrastructure-free domain modules:
 
 | Module | Concept | Method |
 | --- | --- | --- |
 | `dispersion_model.py` | Aerosol bioweapon (allergen) dispersion | Gaussian plume, Pasquill-Gifford stability, valley-channeled transport |
+| `puff_dispersion.py` | Time-resolved dispersion / early warning | Lagrangian Gaussian puff train superposition |
 | `alpine_routes.py` | Alpine route planning (bobsleigh grade) | Track geometry + slope-safety-gated Dijkstra |
+| `descent_dynamics.py` | Bobsleigh descent + banked-curve physics | Point-mass kinematics, lateral g, banked-curve speed limit |
 | `cover_identity.py` | Cover-identity risk (Bray persona) | Weighted additive risk scoring |
+| `identity_timeline.py` | Cover-timeline verification | Interval coverage / consistency analysis |
 
 Plus the thin protocol adapter:
 
 * `mission.py` — `MissionProvider` (brief / recon / plan / execute / debrief)
-  with deterministic provenance and gadget registration.
+  with deterministic provenance and gadget registration. Public protocol shape
+  is stable: `film`, the five methods, and the `register_gadgets` hook
+  (module-level `REGISTRY`).
 * `manuscript_variables.py` — `{{TOKEN}}` hydration from config + live results.
-* `figures/` — matplotlib rendering of the plume footprint and route profile.
+* `figures/` — matplotlib rendering of the plume footprint, puff time series,
+  and descent speed profile.
 
 ## Layout
 
@@ -54,7 +62,7 @@ Run the mission phases:
 uv run python scripts/01_brief.py      # mission definition
 uv run python scripts/02_recon.py      # recon findings
 uv run python scripts/03_plan.py       # execution plan
-uv run python scripts/04_execute.py    # run + write outcome/figure
+uv run python scripts/04_execute.py    # run + write outcome/figures
 uv run python scripts/05_debrief.py    # lessons
 uv run python scripts/z_generate_manuscript_variables.py   # hydrate tokens
 ```
@@ -66,6 +74,7 @@ here is pushed.
 
 The `MissionProvider` in `mission.py` satisfies the frozen `bond_api`
 protocol; `bond_api.discovery.load_provider("on_her_majestys_secret_service")`
-resolves it for coordinators. Gadgets (the dispersion scenario, the plume
-isopleth, the alpine planner, the cover risk scorer) register into a
-`GadgetRegistry` on import.
+resolves it for coordinators. Gadgets (dispersion and puff models, the plume
+isopleth, the alpine planner, the descent simulator and bobsleigh audit, the
+cover risk scorer, and the timeline verifier) register into a `GadgetRegistry`
+on import.

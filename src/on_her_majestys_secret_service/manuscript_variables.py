@@ -63,6 +63,10 @@ def generate_variables(
         dispersion = results["dispersion"]
         alpine = results["alpine"]
         cover = results["cover"]
+        puff = dispersion["puff"]
+        descent = alpine["descent"]
+        bobsleigh = alpine["bobsleigh"]
+        timeline = cover["timeline"]
         isopleth = f"{dispersion['isopleth_reach_m']} m"
         peak_c = f"{dispersion['peak_concentration_kg_m3']:.3e} kg m$^{{-3}}$"
         peak_dist = f"{dispersion['peak_distance_m']} m"
@@ -71,6 +75,16 @@ def generate_variables(
         route_safe = "safe" if alpine["route_safe"] else "unsafe"
         bray_score = f"{cover['bray_score']:.3f}"
         bray_verdict = cover["bray_verdict"]
+        puff_arrival = "N/A" if puff["arrival_time_s"] is None else f"{puff['arrival_time_s']:.0f} s"
+        puff_peak = f"{puff['peak_concentration_kg_m3']:.3e} kg m$^{{-3}}$"
+        descent_time = f"{descent['total_time_s']:.1f} s"
+        descent_speed = f"{descent['max_speed_m_s']:.1f} m/s"
+        banked_speed = f"{bobsleigh['banked_max_speed_m_s']:.1f} m/s"
+        track_g = f"{bobsleigh['max_lateral_g']:.2f} g"
+        track_safe = "safe" if bobsleigh["safe"] else "over-limit"
+        tl_coverage = f"{timeline['coverage'] * 100:.1f}%"
+        tl_conflicts = str(timeline["conflicts"])
+        tl_verdict = timeline["verdict"]
     else:
         isopleth = "N/A"
         peak_c = "N/A"
@@ -80,6 +94,16 @@ def generate_variables(
         route_safe = "N/A"
         bray_score = "N/A"
         bray_verdict = "N/A"
+        puff_arrival = "N/A"
+        puff_peak = "N/A"
+        descent_time = "N/A"
+        descent_speed = "N/A"
+        banked_speed = "N/A"
+        track_g = "N/A"
+        track_safe = "N/A"
+        tl_coverage = "N/A"
+        tl_conflicts = "N/A"
+        tl_verdict = "N/A"
 
     return {
         "BOND_FILM": "On Her Majesty's Secret Service",
@@ -90,11 +114,21 @@ def generate_variables(
         "PIZ_ISOPLETH_REACH_M": str(isopleth),
         "PIZ_PEAK_CONCENTRATION": str(peak_c),
         "PIZ_PEAK_DISTANCE_M": str(peak_dist),
+        "PIZ_PUFF_ARRIVAL_S": str(puff_arrival),
+        "PIZ_PUFF_PEAK_CONC": str(puff_peak),
         "PIZ_ROUTE_DISTANCE_M": str(route_dist),
         "PIZ_ROUTE_MEAN_GRADE_DEG": str(route_grade),
         "PIZ_ROUTE_SAFE": str(route_safe),
+        "PIZ_DESCENT_TIME_S": str(descent_time),
+        "PIZ_DESCENT_MAX_SPEED_M_S": str(descent_speed),
+        "PIZ_BANKED_MAX_SPEED_M_S": str(banked_speed),
+        "PIZ_TRACK_MAX_G": str(track_g),
+        "PIZ_TRACK_SAFE": str(track_safe),
         "PIZ_BRAY_SCORE": str(bray_score),
         "PIZ_BRAY_VERDICT": str(bray_verdict),
+        "PIZ_TIMELINE_COVERAGE": str(tl_coverage),
+        "PIZ_TIMELINE_CONFLICTS": str(tl_conflicts),
+        "PIZ_TIMELINE_VERDICT": str(tl_verdict),
         "PYTHON_VERSION": platform.python_version(),
         "NUMPY_VERSION": np.__version__,
         "GENERATION_TIMESTAMP": datetime.now(timezone.utc).isoformat(timespec="seconds"),

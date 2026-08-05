@@ -3,7 +3,8 @@
 This is a PROJECT BOND film package (mission codename **PIZ GLORIA**, from
 *On Her Majesty's Secret Service*, 1969) converted from the template exemplar
 scaffold. It implements a `MissionProvider` against the frozen `bond_api`
-protocol and ships a pure, deterministic, mock-free scientific domain core.
+protocol and ships a pure, deterministic, mock-free scientific domain core of
+**six** concept modules (phase-4 deepened).
 
 ## Scope & guardrails
 
@@ -20,12 +21,16 @@ protocol and ships a pure, deterministic, mock-free scientific domain core.
 * Type hints + docstrings; `ruff` and `mypy` clean on `src/` and `scripts/`.
 * Manuscript variables injected from `manuscript/config.yaml` +
   `src/.../manuscript_variables.py` — never hand-author metrics in prose.
+* **Protocol stability**: the public shape of `mission.py` is stable — `film`,
+  the five `MissionProvider` methods, and the `register_gadgets` hook /
+  module-level `REGISTRY` are unchanged. Deepening happens inside the package
+  (new modules, richer mission internals).
 
 ## Layer contract
 
 | Surface | Rule |
 | --- | --- |
-| Domain core (`dispersion_model.py`, `alpine_routes.py`, `cover_identity.py`) | Pure math; no `bond_api`, no I/O, no `infrastructure` imports. Importable standalone. |
+| Domain core (`dispersion_model.py`, `puff_dispersion.py`, `alpine_routes.py`, `descent_dynamics.py`, `cover_identity.py`, `identity_timeline.py`) | Pure math; no `bond_api`, no I/O, no `infrastructure` imports. Importable standalone. |
 | `mission.py` | Thin adapter; imports `bond_api` protocol + the pure domain. |
 | `manuscript_variables.py`, `figures/` | Derive from the domain / protocol; may do file I/O. |
 | `scripts/` | Thin CLIs (sys.path bootstrap + invoke). |
@@ -37,8 +42,8 @@ the path dependency never blocks the pure science.
 
 `src/on_her_majestys_secret_service/mission.py` exposes `MissionProvider`
 (module top level) implementing `brief / recon / plan / execute / debrief`
-with the frozen `bond_api` dataclasses. It also registers gadgets
-(dispersion scenario, plume isopleth, alpine planner, cover risk scorer) into a
+with the frozen `bond_api` dataclasses. It registers gadgets (dispersion, puff,
+alpine planner, descent, bobsleigh audit, cover risk, timeline verifier) into a
 `GadgetRegistry`. `pyproject.toml` declares the local path dependency:
 `bond-api = { path = ".../bond/bond-api" }` under `[tool.uv.sources]`. Run
 `uv sync --extra dev` before `pytest`.

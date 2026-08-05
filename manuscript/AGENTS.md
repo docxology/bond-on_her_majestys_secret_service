@@ -18,11 +18,13 @@ enforces the mapping.
 
 ## Figure protocol
 
-Figures are referenced via Pandoc-crossref labels. Current figure:
+Figures are referenced via Pandoc-crossref labels. Current figures:
 
 | Label | PNG | Generator |
 | --- | --- | --- |
 | `{#fig:dispersion}` | `output/figures/aerosol_plume.png` | `figures/dispersion.render_dispersion_figure` |
+| `{#fig:puff}` | `output/figures/puff_footprint.png` | `figures/dispersion.render_puff_figure` |
+| `{#fig:descent}` | `output/figures/descent_profile.png` | `figures/dispersion.render_descent_figure` |
 
 Add figures by adding a generator in `src/.../figures/`, wiring it into a
 script, and referencing it `@fig:label` in a section.

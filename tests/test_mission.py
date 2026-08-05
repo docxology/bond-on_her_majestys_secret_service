@@ -41,10 +41,10 @@ class TestBrief:
         assert brief.film == FILM
         assert brief.codename == CODENAME
 
-    def test_three_objectives_and_two_constraints(self, provider: MissionProvider) -> None:
+    def test_six_objectives_and_two_constraints(self, provider: MissionProvider) -> None:
         brief = provider.brief()
-        assert len(brief.objectives) == 3
-        assert len(brief.assets) == 3
+        assert len(brief.objectives) == 6
+        assert len(brief.assets) == 6
         assert len(brief.constraints) == 2
 
 
@@ -56,11 +56,11 @@ class TestRecon:
 
 
 class TestPlan:
-    def test_plan_has_three_steps(self, provider: MissionProvider) -> None:
+    def test_plan_has_six_steps(self, provider: MissionProvider) -> None:
         plan = provider.plan(provider.brief())
         assert isinstance(plan, MissionPlan)
         names = [step.name for step in plan.steps]
-        assert names == ["dispersion", "alpine", "cover"]
+        assert names == ["dispersion", "puff", "alpine", "descent", "cover", "timeline"]
 
 
 class TestExecute:
@@ -90,7 +90,7 @@ class TestDebrief:
     def test_debrief_carries_lessons(self, provider: MissionProvider) -> None:
         outcome = provider.execute(provider.plan(provider.brief()))
         debrief = provider.debrief(outcome)
-        assert len(debrief.lessons) == 3
+        assert len(debrief.lessons) == 6
         assert debrief.outcome is outcome
 
 
@@ -99,9 +99,14 @@ class TestRunScenario:
         results = run_scenario()
         assert results["dispersion"]["isopleth_reach_m"] > 0.0
         assert results["dispersion"]["peak_concentration_kg_m3"] > 0.0
+        assert results["dispersion"]["puff"]["arrival_time_s"] is not None
+        assert results["dispersion"]["puff"]["steady_concentration_kg_m3"] > 0.0
         assert results["alpine"]["route_found"] is True
         assert results["alpine"]["route_safe"] is True
+        assert results["alpine"]["descent"]["max_speed_m_s"] > 0.0
+        assert results["alpine"]["bobsleigh"]["banked_max_speed_m_s"] > 0.0
         assert results["cover"]["bray_score"] < 0.25
+        assert results["cover"]["timeline"]["verdict"] in {"high", "medium", "low"}
 
     def test_determinism(self) -> None:
         assert run_scenario() == run_scenario()
@@ -115,7 +120,7 @@ class TestProtocolConformance:
     def test_run_mission_full_flow(self, provider: MissionProvider) -> None:
         debrief = run_mission(provider, ReconRequest(goal="verify full flow"))
         assert debrief.outcome.success is True
-        assert len(debrief.lessons) == 3
+        assert len(debrief.lessons) == 6
 
 
 class TestSerialization:
@@ -140,8 +145,12 @@ class TestGadgets:
         returned = register_gadgets(registry)
         assert returned is registry
         assert registry.contains(FILM, "dispersion_model")
+        assert registry.contains(FILM, "puff_time_series")
         assert registry.contains(FILM, "alpine_planner")
+        assert registry.contains(FILM, "descent_simulator")
+        assert registry.contains(FILM, "bobsleigh_audit")
         assert registry.contains(FILM, "cover_risk")
+        assert registry.contains(FILM, "timeline_verifier")
 
     def test_module_registry_auto_registered(self) -> None:
         from on_her_majestys_secret_service.mission import REGISTRY

@@ -12,9 +12,12 @@ src/on_her_majestys_secret_service/mission.py   (bond_api MissionProvider adapte
    |                  +-- figures/ (matplotlib rendering)
    v
 pure domain core
-   dispersion_model.py   Gaussian plume + valley channeling
-   alpine_routes.py      track geometry + slope-safe Dijkstra
-   cover_identity.py     weighted cover-risk scoring
+   dispersion_model.py    Gaussian plume + valley channeling
+   puff_dispersion.py     Lagrangian Gaussian puff train (time-dependent)
+   alpine_routes.py       track geometry + slope-safe Dijkstra
+   descent_dynamics.py    bobsleigh descent kinematics + banked-curve physics
+   cover_identity.py      weighted cover-risk scoring
+   identity_timeline.py   cover-timeline verification (interval coverage)
 ```
 
 ## Dependency direction
@@ -23,7 +26,9 @@ pure domain core
   `infrastructure`, no I/O. This is the standalone fallback — if the `bond-api`
   path dependency ever fails, the pure science still imports and runs.
 * **`mission.py`** imports `bond_api.protocol`, `bond_api.registry`, and the
-  three domain modules. It is the only place the film binds to the protocol.
+  six domain modules. It is the only place the film binds to the protocol; its
+  **public shape is stable** (film slug, five methods, `register_gadgets`
+  hook / module-level `REGISTRY`).
 * **`manuscript_variables.py`** imports `mission.run_scenario` + `yaml` +
   `numpy` and produces `{{TOKEN}}` values.
 * **`figures/`** imports the domain modules and matplotlib; deterministic,

@@ -35,7 +35,7 @@ class TestPhaseCLIs:
     def test_brief(self) -> None:
         result = _run("01_brief.py")
         assert result.returncode == 0
-        assert "Objectives (3)" in result.stdout
+        assert "Objectives (6)" in result.stdout
 
     def test_recon_with_default_goal(self) -> None:
         result = _run("02_recon.py")
@@ -51,8 +51,11 @@ class TestPhaseCLIs:
         result = _run("03_plan.py")
         assert result.returncode == 0
         assert "dispersion" in result.stdout
+        assert "puff" in result.stdout
         assert "alpine" in result.stdout
+        assert "descent" in result.stdout
         assert "cover" in result.stdout
+        assert "timeline" in result.stdout
 
     def test_execute_writes_outcome_and_figure(self, tmp_path: Path) -> None:
         result = _run("04_execute.py")
@@ -60,11 +63,13 @@ class TestPhaseCLIs:
         assert "Mission success: True" in result.stdout
         assert (ROOT / "output" / "data" / "piz_gloria_outcome.json").exists()
         assert (ROOT / "output" / "figures" / "aerosol_plume.png").exists()
+        assert (ROOT / "output" / "figures" / "puff_footprint.png").exists()
+        assert (ROOT / "output" / "figures" / "descent_profile.png").exists()
 
     def test_debrief(self) -> None:
         result = _run("05_debrief.py")
         assert result.returncode == 0
-        assert "Lessons (3)" in result.stdout
+        assert "Lessons (6)" in result.stdout
 
 
 class TestManuscriptCLI:

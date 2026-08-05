@@ -6,19 +6,26 @@ mission:
 
 conditions:
   - "aerosol bioweapon release in an alpine valley (Gaussian plume)"
+  - "time-resolved puff arrival at a downstream receptor (Lagrangian puff train)"
   - "bobsleigh-grade alpine route under a slope-safety gate (Dijkstra)"
+  - "bobsleigh descent kinetics + banked-curve clearance (point-mass integration)"
   - "Bray cover identity under weighted evidence-based risk scoring"
+  - "Bray cover timeline verification (interval coverage / consistency)"
 
 primary_metric:
   name: "deterministic mission outcome (success + provenance)"
   submetrics:
-    - "isopleth reach (m)"
+    - "isopleth reach (m); puff arrival (s) and transient peak"
     - "route distance (m), mean grade (deg), safe flag"
-    - "Bray cover score + verdict"
+    - "descent time (s), max speed (m/s)"
+    - "unbanked max lateral g; banked cornering speed (m/s)"
+    - "Bray cover score + verdict; timeline coverage, conflicts, verdict"
 
 expected_outputs:
   figures:
     - "output/figures/aerosol_plume.png"
+    - "output/figures/puff_footprint.png"
+    - "output/figures/descent_profile.png"
   data:
     - "output/data/piz_gloria_outcome.json"
     - "output/data/manuscript_variables.json"
@@ -34,6 +41,11 @@ conditions_fixed:
   valley_depth_m: 400.0
   isopleth_threshold_kg_m3: 1.0e-7
   route_max_slope_deg: 30.0
+  puff_receptor_x_m: 2000.0
+  puff_threshold_kg_m3: 1.0e-8
+  descent_mass_kg: 100.0
+  curve_max_g: 4.0
+  bank_deg: 55.0
 
 baseline: []
 ablation: []

@@ -1,7 +1,7 @@
 # Domain profile — PIZ GLORIA (on_her_majestys_secret_service)
 # Advisory agentic-research controls for this BOND film package.
 
-domain: "special-agent mission software — aerosol dispersion, alpine routing, cover identity"
+domain: "special-agent mission software — aerosol dispersion (plume + puff), bobsleigh alpine ops (route + descent + banked curve), cover identity (risk + timeline)"
 
 review_gates:
   - "pytest --cov=src --cov-fail-under=90"
@@ -16,7 +16,7 @@ source_policy:
 
 artifact_expectations:
   - "mission outcome JSON under output/data/"
-  - "at least one dispersion figure under output/figures/"
+  - "plume, puff, and descent figures under output/figures/"
   - "manuscript variables JSON"
 
 benchmark_rubric:

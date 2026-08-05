@@ -12,15 +12,35 @@ claims:
     source: "src/on_her_majestys_secret_service/mission.py::run_scenario"
     derivation: "isopleth_distance bisection, computed"
     verifiable: true
+  - id: "pg-puff-arrival"
+    statement: "Puff-train arrival time and transient peak at the downstream receptor"
+    source: "src/on_her_majestys_secret_service/mission.py::run_scenario"
+    derivation: "Lagrangian Gaussian puff superposition, computed"
+    verifiable: true
   - id: "pg-route-safe"
     statement: "Planned alpine exfiltration route safe under the slope gate"
     source: "src/on_her_majestys_secret_service/mission.py::run_scenario"
     derivation: "Dijkstra slope-gated planner over analytic terrain"
     verifiable: true
+  - id: "pg-descent"
+    statement: "Bobsleigh descent total time and max speed on the canonical track"
+    source: "src/on_her_majestys_secret_service/mission.py::run_scenario"
+    derivation: "point-mass descent integration, computed"
+    verifiable: true
+  - id: "pg-banked-curve"
+    statement: "Unbanked hairpin lateral-g over-limit and banked-curve cornering speed"
+    source: "src/on_her_majestys_secret_service/mission.py::run_scenario"
+    derivation: "curve radii x speed audit + banked-friction equilibrium, computed"
+    verifiable: true
   - id: "pg-bray-cover"
     statement: "Bray persona aggregate cover-risk score and verdict"
     source: "src/on_her_majestys_secret_service/mission.py::run_scenario"
     derivation: "weighted additive risk model, computed"
+    verifiable: true
+  - id: "pg-timeline"
+    statement: "Bray timeline coverage, contradiction count, and verdict"
+    source: "src/on_her_majestys_secret_service/mission.py::run_scenario"
+    derivation: "interval coverage / consistency analysis, computed"
     verifiable: true
 
 model_parameters:
@@ -33,6 +53,15 @@ model_parameters:
   isopleth_threshold_kg_m3: 1.0e-7
   route_max_slope_deg: 30.0
   route_grid: 40
+  puff_receptor_x_m: 2000.0
+  puff_threshold_kg_m3: 1.0e-8
+  puff_initial_sigma_m: 1.0
+  descent_mass_kg: 100.0
+  descent_friction: 0.03
+  descent_drag_area_m2: 0.45
+  descent_rho_kg_m3: 1.2
+  curve_max_g: 4.0
+  bank_deg: 55.0
   cover_weights:
     documentation: 0.25
     linguistic_fit: 0.20

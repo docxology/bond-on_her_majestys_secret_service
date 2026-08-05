@@ -13,6 +13,14 @@ The PIZ GLORIA release and routing scenario is fixed in
 * High-hazard isopleth threshold: `1.0e-7` kg/m^3.
 * Route grid: `40 x 40` cells over a 10 km x 10 km analytic range,
   maximum safe slope `30` deg.
+* Puff early-warning receptor: `2000` m downwind, threshold `1.0e-8` kg/m^3,
+  emission cadence `10` s, initial puff size `1` m.
+* Bobsleigh descent: rider+sled mass `100` kg, friction `0.03`, drag area
+  `0.45` m^2, air density `1.2` kg/m^3, integration step `0.05` s; canonical
+  track with a tight hairpin audited against a `4`-g lateral ceiling and a
+  `55`-degree bank for cornering clearance.
+* Cover timeline: mission window `[0, 1440)` minutes; `3` claimed events vs
+  `4` observed sightings.
 
 ## Software environment
 

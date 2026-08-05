@@ -51,3 +51,35 @@ The aggregate cover risk is the weighted mean $\sum w_a r_a / \sum w_a$, and an
 attribute risk is a linear function $r_a = \beta_a + m_a\,c_a$ of normalized
 incriminating evidence $c_a$. A breach scenario raises one or more attributes'
 evidence and recomputes the aggregate and its discrete verdict.
+
+## Time-dependent puff dispersion
+
+To capture *when* a threat arrives, the continuous release is discretized into
+a deterministic train of Gaussian puffs. Puff $i$, emitted at $t_i$ with mass
+$Q\,\Delta t$, advects downwind at the effective wind and spreads as it
+travels. Superimposing every emitted puff at a receptor gives a concentration
+time series, whose early crossing of a detection threshold is the **arrival
+time** — the operational early-warning metric. For a steady release the puff
+superposition converges to the plume solution far downwind, a cross-check the
+tests assert directly.
+
+## Bobsleigh descent dynamics
+
+A point-mass slides under gravity down a track profile resisted by kinetic
+friction and aerodynamic drag:
+
+$$a(v) = g\sin\theta - \mu g\cos\theta - k v^2, \qquad k = \tfrac{1}{2}\rho C_d A / m,$$
+
+integrated with a fixed time step along the polyline. Because a bobsleigh line
+is defined by its turns, the module pairs the speed profile with curve physics:
+lateral g-load $v^2/(gR)$ and the banked-curve speed limit
+$v_{\max} = \sqrt{gR\,(\tan\beta + \mu_L)/(1 - \mu_L \tan\beta)}$.
+
+## Cover-timeline verification
+
+A cover is as strong as its timeline. Claimed events and observed sightings
+are intervals $[s, e)$ over mission minutes; an observation is *matched* when an
+overlapping claim agrees on location and *conflicts* when an overlapping claim
+names a different location. The coverage fraction (matched observed minutes
+over total observed minutes) yields a discrete verdict, and a single
+contradicting sighting can unseat an otherwise-covered story.

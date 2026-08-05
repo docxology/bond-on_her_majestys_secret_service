@@ -19,8 +19,14 @@ from on_her_majestys_secret_service.dispersion_model import (  # noqa: E402
     PlumeScenario,
     downwind_axis,
 )
+from on_her_majestys_secret_service.puff_dispersion import puff_field_time_series  # noqa: E402
 
-__all__ = ["render_dispersion_figure", "render_route_figure"]
+__all__ = [
+    "render_descent_figure",
+    "render_dispersion_figure",
+    "render_puff_figure",
+    "render_route_figure",
+]
 
 FONT_SIZE = 11
 
@@ -79,6 +85,64 @@ def render_route_figure(
     ax.set_xlabel("Easting (m)")
     ax.set_ylabel("Elevation (m)")
     ax.set_title("PIZ GLORIA alpine route — elevation profile")
+    fig.tight_layout()
+    path = Path(output_path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(path)
+    plt.close(fig)
+    return path
+
+
+def render_puff_figure(
+    scenario: PlumeScenario,
+    output_path: str | Path,
+    *,
+    receptor_x: float = 2000.0,
+) -> Path:
+    """Render the puff concentration time series at a downwind receptor."""
+    _style()
+    series = puff_field_time_series(
+        scenario,
+        receptor_x,
+        0.0,
+        1.5,
+        t_start=0.0,
+        t_end=1500.0,
+        dt=10.0,
+    )
+    fig, ax = plt.subplots(figsize=(7, 4))
+    ax.plot(series["time"], series["concentration"], color="#b45309", linewidth=2)
+    ax.set_xlabel("Time since release (s)")
+    ax.set_ylabel("Concentration (kg m$^{-3}$)")
+    ax.set_title("PIZ GLORIA puff footprint at downstream receptor")
+    ax.set_yscale("log")
+    fig.tight_layout()
+    path = Path(output_path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(path)
+    plt.close(fig)
+    return path
+
+
+def render_descent_figure(
+    descent: dict[str, object],
+    output_path: str | Path,
+) -> Path:
+    """Render the bobsleigh descent speed vs distance profile."""
+    _style()
+    dists = descent.get("distance", [])
+    speeds = descent.get("speed", [])
+    fig, ax = plt.subplots(figsize=(7, 4))
+    if isinstance(dists, list) and isinstance(speeds, list) and dists and speeds:
+        ax.plot(
+            [float(d) for d in dists],
+            [float(v) for v in speeds],
+            color="#15803d",
+            linewidth=2,
+        )
+    ax.set_xlabel("Distance along track (m)")
+    ax.set_ylabel("Speed (m s$^{-1}$)")
+    ax.set_title("PIZ GLORIA bobsleigh descent — speed profile")
     fig.tight_layout()
     path = Path(output_path)
     path.parent.mkdir(parents=True, exist_ok=True)

@@ -30,10 +30,15 @@ agents working inside `on_her_majestys_secret_service`.
    outside explicit lineage documentation. `rg` should return nothing.
 10. **Quality gates**: `ruff check` + `ruff format --check` + `mypy` on
     `src/` and `scripts/` must be clean.
+11. **Protocol stability**: never change the public shape of `mission.py`
+    (`film`, the five `MissionProvider` methods, the `register_gadgets` hook
+    and module-level `REGISTRY`). Deepen inside the package instead.
 
 ## Mise-en-scène
 
 The package models the PIZ GLORIA operation: an aerosolized allergen bioweapon
-release and the alpine exfiltration route an agent would use under the *Bray*
-cover. Treat the domain math seriously — it is real dispersion / routing /
-risk science, not placeholder code.
+release and its time-resolved puff footprint, a bobsleigh-grade exfiltration
+line (slope safety + descent kinetics + banked-curve clearance), and the *Bray*
+cover identity (weighted risk + timeline verification). Treat the domain math
+seriously — it is real dispersion / routing / kinetics / verification science,
+not placeholder code.
