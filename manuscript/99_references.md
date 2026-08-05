@@ -11,7 +11,12 @@
    dispersion and deposition*. NATO CCMS 21st International Technical Meeting
    on Air Pollution Modelling and Its Application, 1998.
 5. Morlock, M. M., & Zatsiorsky, V. M. Factors influencing performance in
-   bobsled: Part I — kinematics. *Journal of Biomechanics*, 22(8-9), 1989.
+   bobsledding: I — Influences of the bobsled crew and the environment.
+   *International Journal of Sport Biomechanics*, 5(2), 208–221, 1989. — A
+   regression of finish time on start order, ice temperature and push time. It
+   frames bobsleigh performance as a measurable multi-factor problem; the
+   point-mass descent equations in `descent_dynamics.py` are ordinary
+   rigid-body mechanics and do not rest on it.
 6. McClung, D., & Schaerer, P. *The Avalanche Handbook*. 3rd ed., The
    Mountaineers, 2006.
 7. Cormen, T., Leiserson, C., Rivest, R., & Stein, C. *Introduction to

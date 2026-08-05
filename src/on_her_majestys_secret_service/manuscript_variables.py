@@ -40,6 +40,26 @@ def load_manuscript_config(config_path: str | Path | None = None) -> dict[str, A
     return data
 
 
+def edition_stamp(paper: dict[str, Any]) -> str:
+    """Return the manuscript's edition stamp, derived from committed config.
+
+    This token used to read a wall clock, which made every regeneration write
+    different bytes while §6 of the manuscript claimed byte-identical
+    reproduction. Deriving it from ``paper.date`` keeps a meaningful edition
+    marker and makes that claim true. The package's regeneration-determinism
+    test compares real bytes across two runs; a test that injects a fixed
+    ``now`` cannot observe this defect, which is how it survived.
+    """
+    date = str(paper.get("date", "")).strip()
+    if not date:
+        raise ValueError("manuscript config 'paper.date' is required for a deterministic edition stamp")
+    try:
+        parsed = datetime.strptime(date, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+    except ValueError as exc:
+        raise ValueError(f"manuscript config 'paper.date' must be YYYY-MM-DD, got {date!r}") from exc
+    return parsed.isoformat(timespec="seconds")
+
+
 def generate_variables(
     *,
     config_path: str | Path | None = None,
@@ -131,7 +151,7 @@ def generate_variables(
         "PIZ_TIMELINE_VERDICT": str(tl_verdict),
         "PYTHON_VERSION": platform.python_version(),
         "NUMPY_VERSION": np.__version__,
-        "GENERATION_TIMESTAMP": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "GENERATION_TIMESTAMP": edition_stamp(paper),
     }
 
 

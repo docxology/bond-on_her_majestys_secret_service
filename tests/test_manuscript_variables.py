@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import time
+
 import pytest
 
 from on_her_majestys_secret_service.manuscript_variables import (
@@ -121,3 +123,55 @@ class TestLiveCrossReference:
             tokens.update(match[2:-2] for match in _TOKEN_RE.findall(text))
         missing = sorted(tokens - set(variables))
         assert not missing, f"manuscript tokens not generated: {missing}"
+
+
+class TestRegenerationDeterminism:
+    """Regenerating the manuscript tree must be byte-identical across a second boundary.
+
+    Section 6 of the manuscript claims byte-identical reproduction. That claim
+    was false: GENERATION_TIMESTAMP read a wall clock and was rendered into
+    05_experimental_setup.md, so every run wrote different bytes. The tests that
+    existed injected a fixed ``now``, so they controlled the very input that
+    caused the defect and could never observe it. These compare real bytes.
+    """
+
+    def test_edition_stamp_is_derived_from_committed_config(self) -> None:
+        from on_her_majestys_secret_service.manuscript_variables import edition_stamp
+
+        stamp = edition_stamp({"date": "2026-08-04"})
+        assert stamp.startswith("2026-08-04")
+        # Same input, same output — no hidden clock.
+        assert stamp == edition_stamp({"date": "2026-08-04"})
+        # A different committed date must move it, so the stamp is not a constant.
+        assert edition_stamp({"date": "2025-01-02"}) != stamp
+
+    def test_edition_stamp_rejects_missing_or_malformed_date(self) -> None:
+        from on_her_majestys_secret_service.manuscript_variables import edition_stamp
+
+        with pytest.raises(ValueError):
+            edition_stamp({})
+        with pytest.raises(ValueError):
+            edition_stamp({"date": "August 2026"})
+
+    def test_no_token_reads_a_wall_clock(self) -> None:
+        """Two generations across a real second boundary must be identical."""
+        first = generate_variables()
+        time.sleep(1.1)
+        second = generate_variables()
+        differing = {k for k in first if first[k] != second.get(k)}
+        assert not differing, f"tokens changed between runs: {sorted(differing)}"
+
+    def test_resolved_manuscript_tree_is_byte_identical_across_runs(self, tmp_path) -> None:
+        manuscript_dir = PACKAGE_ROOT / "manuscript"
+
+        def render(target):
+            resolve_manuscript_tree(generate_variables(), manuscript_dir=manuscript_dir, output_dir=target)
+            return {p.name: p.read_bytes() for p in sorted(target.glob("*.md"))}
+
+        first = render(tmp_path / "run1")
+        time.sleep(1.1)
+        second = render(tmp_path / "run2")
+
+        assert first.keys() == second.keys()
+        differing = [name for name in first if first[name] != second[name]]
+        assert not differing, f"regeneration is not byte-identical: {differing}"

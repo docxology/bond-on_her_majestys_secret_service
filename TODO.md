@@ -6,69 +6,65 @@ descent (bobsleigh point-mass dynamics, curve physics, slope-safety-gated routin
 identity (weighted persona risk plus interval-arithmetic timeline verification).
 
 **Verified state, measured 2026-08-05:** `uv run pytest tests/ --cov=src --cov-fail-under=90` →
-**192 passed, 98.13% coverage**. ruff, `ruff format --check` and mypy clean. Six domain modules plus
+**196 passed, 98.15% coverage**. ruff, `ruff format --check` and mypy clean. Six domain modules plus
 `mission.py` (frozen `bond_api.MissionProvider`) and `manuscript_variables.py`.
 
 ## Open work
 
 ### Correctness
 
-**C1 — Regeneration is not byte-identical, but two manuscript sections say it is.**
-`src/on_her_majestys_secret_service/manuscript_variables.py` derives `GENERATION_TIMESTAMP` from a
-wall clock and renders it into persisted output, so every regeneration writes different bytes.
-`manuscript/04_conclusion.md` and `manuscript/06_reproducibility.md` both claim byte-identical
-reproduction. Confirmed empirically on 2026-08-05: two runs one second apart produced different
-hashes.
-
-*Done when:* the two-run hashes match, **or** every byte-identical claim is removed. Plus a
-regeneration-determinism test that runs the generator twice and compares real bytes — a test that
-injects a fixed `now` cannot detect this defect, which is why it survived. Prove the new test fails
-by temporarily reintroducing the wall clock.
-
-```bash
-uv run python scripts/z_generate_manuscript_variables.py
-find output -type f \( -name '*.json' -o -name '*.md' \) | sort | xargs cat | md5
-sleep 1 && uv run python scripts/z_generate_manuscript_variables.py
-find output -type f \( -name '*.json' -o -name '*.md' \) | sort | xargs cat | md5
-```
-
-This is a fleet-wide defect; 21 sibling packages carried it and were swept on 2026-08-05. **This
-package was omitted from that sweep** and is the only one still carrying it.
+**None open.** C1 (wall-clock determinism) and C2 (mis-attributed citation) were both closed on
+2026-08-05 — see *Closed* below.
 
 ### Verification
 
-**V1 — This package has never been adversarially audited.** Every one of its 33 siblings was
-attacked by an independent skeptic; three attempts on this package failed on model safeguards. Its
-clean bill of health comes only from agents that were also improving it — precisely the arrangement
-that produced overclaims elsewhere. Audit against the defect patterns actually found in siblings:
+**V1 — The adversarial audit is partial.** Five agent attempts to audit this package failed on model
+safeguards (three on Opus, two on Sonnet), so the audit was finally run inline by the session lead
+rather than by an independent skeptic. It covered: figure provenance (clean — `figures/dispersion.py`
+imports `dispersion_model` and `puff_dispersion` rather than re-declaring constants), the `N/A`
+fallback path (clean — `require_outputs=False` is a deliberate draft mode, bound in both directions
+by `tests/test_manuscript_variables.py`, and `output/` is gitignored so no `N/A` artifact was ever
+committed), and all seven citations (one was wrong; see C2 in *Closed*).
 
-- **Green by construction** — a "recovered" value derived from the same quantity being recovered; a
-  count that can only equal the number requested. Check every headline metric in
-  `manuscript/03_results.md`: could it come out any other way?
-- **Tautological controls** — a positive control asserting `X+1 != X`, never exercising the
-  mechanism it advertises.
-- **Figures bypassing canonical computation** — confirm `figures/` imports its numbers from the
-  domain core rather than re-declaring constants. Editing `manuscript/config.yaml` must change the
-  figures, not only the prose.
-- **False mathematical claims in docstrings** — verify stated maths numerically against what the
-  code computes. A sibling asserted a noncentrality parameter its own code contradicted, inflating a
-  published probability from 54% to 66%.
-- **Mis-attributed citations** — a sibling cited a real Haldane paper with the wrong year, volume
-  and journal, *and* for a model it does not contain. Independently check each of the seven entries
-  in `manuscript/references.bib` (Arya 1999, Turner 1970, Zannetti 1990, Sykes et al. 1998,
-  Morlock & Zatsiorsky 1989, McClung & Schaerer 2006, Cormen et al. 2009): does the work exist with
-  that year and venue, and does it contain the model it is cited for?
-- **Hollow tests** — assertions that cannot fail, tests asserting only a return type or PNG magic
-  bytes, substring assertions matching a label prefix regardless of the value.
+*Not yet covered, and still the highest-value work here:* green-by-construction checks on every
+headline metric in `manuscript/03_results.md`, hollow-test review across `tests/`, and numerical
+verification of the mathematical claims in module docstrings. A sibling asserted a noncentrality
+parameter its own code contradicted, inflating a published probability from 54% to 66%.
 
-*Done when:* an independent adversarial pass has run and its findings are recorded here or resolved.
-This package repeatedly trips Opus safeguards; use a different model.
+*Done when:* an independent agent — not the one that wrote or fixed this package — has attacked those
+three vectors and recorded its findings here.
 
-**V2 — The puff/plume convergence claim is asserted in prose.** `puff_dispersion.py` is documented
+**V2 — Bibliography entries are never cited inline.** All seven keys in `manuscript/references.bib`
+appear in `99_references.md` as a numbered reading list, but no manuscript section cites them with
+`[@key]`. They are reachable by a reader but absent from the citation graph, so the compendium's
+unified bibliography carries entries nothing points at.
+
+*Done when:* each source is either cited at the point its model is used, or the bibliography is
+explicitly framed as background reading rather than works cited.
+
+**V3 — The puff/plume convergence claim is asserted in prose.** `puff_dispersion.py` is documented
 as provably converging to the steady plume far downwind.
 
-*Done when:* the property is bound by a test with an explicit tolerance across a range of downwind
-distances, plus a negative control at a distance where the two models should *not* agree.
+*Done when:* bound by a test with an explicit tolerance across a range of downwind distances, plus a
+negative control at a distance where the two models should *not* agree.
+
+### Closed 2026-08-05
+
+**C1 — Wall-clock timestamp broke the byte-identical claim.** `GENERATION_TIMESTAMP` read
+`datetime.now()` and rendered into `manuscript/05_experimental_setup.md` while
+`manuscript/04_conclusion.md` and `06_reproducibility.md` claimed byte-identical regeneration. Now
+derived from the committed `paper.date` via `edition_stamp()`. Bound by
+`TestRegenerationDeterminism`, which compares real bytes across a second boundary — and was proven
+able to fail by temporarily reintroducing the wall clock. This was the last package in the fleet
+carrying the defect.
+
+**C2 — Mis-attributed citation.** `morlock1989bobsled` gave the title as "Factors influencing
+performance in bobsled: Part I: kinematics" in *Journal of Biomechanics* 22(8-9):965–970. Every one
+of those fields was wrong. The paper is Morlock & Zatsiorsky, "Factors influencing performance in
+bobsledding: I: Influences of the bobsled crew and the environment", *International Journal of Sport
+Biomechanics* 5(2):208–221. Its actual scope — a regression of finish time on start order, ice
+temperature and push time — is now stated in both `references.bib` and `99_references.md`, along
+with the fact that it does not underwrite the point-mass equations in `descent_dynamics.py`.
 
 ### Documentation
 
@@ -111,7 +107,7 @@ delegate the persisted record. Note the constraint: that helper defaults `starte
 ```bash
 cd /Users/4d/Documents/GitHub/template/projects/working/bond/on_her_majestys_secret_service
 
-uv run pytest tests/ --cov=src --cov-fail-under=90   # expect 192 passed, ~98.13%
+uv run pytest tests/ --cov=src --cov-fail-under=90   # expect 196 passed, ~98.15%
 uv run ruff check src/ scripts/ tests/
 uv run ruff format --check src/ scripts/ tests/
 uv run mypy src/ scripts/                            # expect clean, 19 files
