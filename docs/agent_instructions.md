@@ -18,7 +18,8 @@ agents working inside `on_her_majestys_secret_service`.
 5. **>=90% coverage**: `uv run python -m pytest tests/ --cov=src --cov-fail-under=90`
    must pass, on both lines and branches.
 6. **Layer contract**: the pure domain modules (`dispersion_model.py`,
-   `alpine_routes.py`, `cover_identity.py`) must not import `bond_api`,
+   `puff_dispersion.py`, `alpine_routes.py`, `descent_dynamics.py`,
+   `cover_identity.py`, `identity_timeline.py`) must not import `bond_api`,
    `infrastructure`, or perform I/O; they stay importable standalone. Only
    `mission.py` and downstream layers may touch `bond_api`.
 7. **Thin scripts**: `scripts/` contains thin CLIs that bootstrap `sys.path`

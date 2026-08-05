@@ -4,8 +4,11 @@ layers:
   domain:
     modules:
       - "src/on_her_majestys_secret_service/dispersion_model.py"
+      - "src/on_her_majestys_secret_service/puff_dispersion.py"
       - "src/on_her_majestys_secret_service/alpine_routes.py"
+      - "src/on_her_majestys_secret_service/descent_dynamics.py"
       - "src/on_her_majestys_secret_service/cover_identity.py"
+      - "src/on_her_majestys_secret_service/identity_timeline.py"
     rules:
       - "pure math only"
       - "no bond_api imports"

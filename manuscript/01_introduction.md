@@ -9,17 +9,27 @@ the operational mathematics behind that operation: the threat of an aerosolized
 allergen bioweapon on a mountaintop, the geometry of an alpine descent line,
 and the fragility of a fabricated identity.
 
-This package therefore implements three real, deterministic scientific models
-as its pure domain core:
+This package therefore implements six real, deterministic scientific models
+as its pure domain core, grouped under the three operational pillars the film
+suggests:
 
 * `dispersion_model.py` — the classical Gaussian plume solution for a
   continuous elevated point source, with Pasquill-Gifford stability-dependent
   dispersion and a valley-channeling correction to the transport wind.
+* `puff_dispersion.py` — a Lagrangian Gaussian puff train that adds the time
+  dimension to the same release: an early-warning arrival time and transient
+  peak concentration the steady plume cannot express.
 * `alpine_routes.py` — track-geometry primitives (grade, chord length, Menger
   curvature) and a slope-safety-gated Dijkstra planner for an extrapolated
   safe descent.
+* `descent_dynamics.py` — point-mass bobsleigh kinematics down that route,
+  paired with banked-curve physics (lateral g-load, safe cornering speed) so
+  the exfiltration line is audited for both slope and turn safety.
 * `cover_identity.py` — a weighted additive risk model that scores how "held"
   an alias like the Bray persona is under scrutiny.
+* `identity_timeline.py` — interval-arithmetic verification of that persona's
+  claimed alibi against independently observed sightings, so a single
+  contradicting observation can unseat an otherwise-covered cover.
 
 The film's software also implements the frozen `bond_api` mission protocol,
 exposing a deterministic `MissionProvider` that a coordinator can discover and
@@ -28,7 +38,9 @@ cycle.
 
 ## Reader's guide
 
-* Section @sec:methodology derives the dispersion, route, and cover models.
+* Section @sec:methodology derives all six models: dispersion, puff, route,
+  descent, cover, and timeline.
 * Section @sec:results presents the executed mission metrics and figures.
 * Section @sec:experimental_setup lists the fixed scenario parameters.
 * Section @sec:reproducibility records provenance, hashing, and test coverage.
+* Section @sec:scope states the models' limits and cites the related work.
