@@ -2,8 +2,8 @@
 
 Generated counts (do not hand-edit; re-run the test gate to refresh).
 
-- Test count: 192 passed (0 skipped, 0 failed)
-- Coverage (line + branch) on `src/`: 98.13%
+- Test count: 205 passed (0 skipped, 0 failed)
+- Coverage (line + branch) on `src/`: 97.85%
 
 Command:
 ```

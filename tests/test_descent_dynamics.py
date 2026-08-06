@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import math
+
 import pytest
 
 from on_her_majestys_secret_service.descent_dynamics import (
@@ -37,6 +39,19 @@ class TestBankedCurve:
         # tan(70) * 0.6 > 1 -> denominator <= 0 -> over-bank rejection.
         with pytest.raises(ValueError):
             banked_curve_max_speed(30.0, 70.0, lateral_friction=0.6)
+
+    def test_non_positive_grip_numerator_rejected(self) -> None:
+        """Round-2 regression: a negative-facing (down-hill-tilted) bank that
+        would make the grip numerator non-positive must raise a clear
+        ValueError, never an obscure math-domain sqrt error."""
+        with pytest.raises(ValueError):
+            banked_curve_max_speed(30.0, -70.0, lateral_friction=0.6)
+
+    def test_bank_at_or_beyond_vertical_rejected(self) -> None:
+        with pytest.raises(ValueError):
+            banked_curve_max_speed(30.0, 90.0)
+        with pytest.raises(ValueError):
+            banked_curve_max_speed(30.0, -90.0)
 
     def test_lateral_g(self) -> None:
         assert lateral_gaccel(0.0, 30.0) == 0.0
@@ -136,3 +151,20 @@ class TestCanonicalTrack:
 
     def test_track_deterministic(self) -> None:
         assert canonical_bobsleigh_track() == canonical_bobsleigh_track()
+
+
+class TestDescentDistance:
+    def test_total_distance_matches_track_arc_length(self) -> None:
+        """Round-2 regression: the reported total descent distance must be the
+        track's true arc length, not the stepped-position overshoot.
+
+        A previous bookkeeping bug advanced the accumulated position with the
+        step-start speed but the segment remainder with the step-end speed,
+        inflating total_distance_m by ~68 m (~7 %) on the canonical track
+        (1032.6 vs 964.5 m). This test pins the metric to the geometry so the
+        bug cannot return undetected.
+        """
+        track = canonical_bobsleigh_track()
+        arc = sum(math.dist(a, b) for a, b in zip(track, track[1:]))
+        sim = descent_simulation(track)
+        assert sim["total_distance_m"] == pytest.approx(arc, rel=1e-6)

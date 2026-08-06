@@ -25,6 +25,7 @@ Figures are referenced via Pandoc-crossref labels. Current figures:
 | `{#fig:dispersion}` | `output/figures/aerosol_plume.png` | `figures/dispersion.render_dispersion_figure` |
 | `{#fig:puff}` | `output/figures/puff_footprint.png` | `figures/dispersion.render_puff_figure` |
 | `{#fig:descent}` | `output/figures/descent_profile.png` | `figures/dispersion.render_descent_figure` |
+| `{#fig:route}` | `output/figures/route_profile.png` | `figures/dispersion.render_route_figure` |
 
 Add figures by adding a generator in `src/.../figures/`, wiring it into a
 script, and referencing it `@fig:label` in a section.

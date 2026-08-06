@@ -16,7 +16,7 @@ $H$ the effective release height [m], and $\sigma_y,\sigma_z$ the horizontal and
 vertical dispersion coefficients. The coefficients follow the open-country
 Pasquill-Gifford power laws $\sigma_y = a x^b$ and $\sigma_z = c x^d$, with the
 standard per-stability-class coefficient set (classes A–F, unstable to
-stable).
+stable) [@arya1999dispersion; @turner1970workbook].
 
 Because the release sits in a valley, the transport wind is corrected by a
 channeling factor
@@ -40,9 +40,10 @@ bobsleigh-grade line:
 * discrete Menger curvature $k = 4A / (|ab|\,|bc|\,|ca|)$ for turn sharpness.
 
 A segment is classified *safe*, *marginal*, or *unsafe* by grade and rejected
-when it also violates a curvature cap; the planner runs Dijkstra on an
+when it also violates a curvature cap; the planner runs Dijkstra [@cormen2009algorithms] on an
 8-connected grid, discarding any step whose chord grade exceeds the maximum
-safe slope, and costs the remainder by distance plus a grade penalty.
+safe slope, and costs the remainder by distance plus a grade penalty, in the
+spirit of alpine slope/avalanche danger rating [@mcclung2006avalanche].
 
 ## Cover-identity risk scoring
 
@@ -55,9 +56,10 @@ evidence and recomputes the aggregate and its discrete verdict.
 ## Time-dependent puff dispersion
 
 To capture *when* a threat arrives, the continuous release is discretized into
-a deterministic train of Gaussian puffs. Puff $i$, emitted at $t_i$ with mass
-$Q\,\Delta t$, advects downwind at the effective wind and spreads as it
-travels. Superimposing every emitted puff at a receptor gives a concentration
+a deterministic train of Gaussian puffs, the Lagrangian puff-train approach
+used by operational puff models [@zannetti1990air; @sykes1998scipuff]. Puff
+$i$, emitted at $t_i$ with mass $Q\,\Delta t$, advects downwind at the
+effective wind and spreads as it travels. Superimposing every emitted puff at a receptor gives a concentration
 time series, whose early crossing of a detection threshold is the **arrival
 time** — the operational early-warning metric. For a steady release the puff
 superposition converges to the plume solution far downwind, a cross-check the

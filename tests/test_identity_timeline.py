@@ -50,6 +50,19 @@ class TestTimeline:
         claims, obs = canonical_timeline()
         assert matched_minutes((), obs) == 0.0
 
+    def test_overlapping_same_location_claims_are_not_double_counted(self) -> None:
+        """Round-2 regression: two overlapping same-location claims covering an
+        observation must count the union (80 min), not their sum capped at the
+        observation (100 min). A previous version double-counted and could
+        falsely hold a cover whose true union coverage was below the gate."""
+        claims = (_ev(0, 80, "gstaad"), _ev(20, 40, "gstaad"))
+        obs = (_ev(0, 100, "gstaad"),)
+        assert matched_minutes(claims, obs) == pytest.approx(80.0)
+        c = timeline_consistency(claims, obs)
+        assert c["matched_min"] == pytest.approx(80.0)
+        assert c["coverage"] == pytest.approx(0.8)
+        assert c["held"] is True  # 0.8 is exactly the coverage gate
+
     def test_conflicts_canonical(self) -> None:
         claims, obs = canonical_timeline()
         conflicts = timeline_conflicts(claims, obs)

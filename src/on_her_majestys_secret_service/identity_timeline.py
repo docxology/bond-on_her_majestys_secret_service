@@ -73,18 +73,44 @@ def total_observed_minutes(observations: tuple[TimelineEvent, ...] | list[Timeli
     return float(sum(event.end - event.start for event in observations))
 
 
+def _union_length(intervals: list[tuple[float, float]]) -> float:
+    """Length of the union of half-open intervals (overlaps merged)."""
+    if not intervals:
+        return 0.0
+    intervals = sorted(intervals)
+    total = 0.0
+    cur_s, cur_e = intervals[0]
+    for s, e in intervals[1:]:
+        if s <= cur_e:
+            cur_e = max(cur_e, e)
+        else:
+            total += cur_e - cur_s
+            cur_s, cur_e = s, e
+    total += cur_e - cur_s
+    return total
+
+
 def matched_minutes(
     claims: tuple[TimelineEvent, ...] | list[TimelineEvent],
     observations: tuple[TimelineEvent, ...] | list[TimelineEvent],
 ) -> float:
-    """Observed minutes matched by a same-location overlapping claim."""
+    """Observed minutes matched by a same-location overlapping claim.
+
+    Per observation, the matching claims are merged into a union of covered
+    intervals before summing, so two overlapping same-location claims never
+    double-count the shared minutes (previously this inflated coverage and
+    could falsely hold a cover whose union coverage was below the gate).
+    """
     matched = 0.0
     for obs in observations:
-        cover = 0.0
+        intervals: list[tuple[float, float]] = []
         for claim in claims:
             if claim.location == obs.location:
-                cover += _overlap(obs, claim)
-        matched += min(cover, obs.end - obs.start)
+                start = max(obs.start, claim.start)
+                end = min(obs.end, claim.end)
+                if end > start:
+                    intervals.append((start, end))
+        matched += _union_length(intervals)
     return float(matched)
 
 

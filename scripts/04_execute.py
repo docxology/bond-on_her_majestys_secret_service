@@ -30,6 +30,7 @@ from on_her_majestys_secret_service.figures import (  # noqa: E402
     render_descent_figure,
     render_dispersion_figure,
     render_puff_figure,
+    render_route_figure,
 )
 from on_her_majestys_secret_service.mission import (  # noqa: E402
     SCENARIO,
@@ -56,6 +57,10 @@ def main() -> int:
     puff_fig = render_puff_figure(SCENARIO, fig_dir / "puff_footprint.png")
     descent_full = descent_simulation(canonical_bobsleigh_track())
     descent_fig = render_descent_figure(descent_full, fig_dir / "descent_profile.png")
+    route_fig = render_route_figure(
+        {"waypoints": outcome.results["alpine"]["waypoints"]},
+        fig_dir / "route_profile.png",
+    )
 
     disp = outcome.results["dispersion"]
     alpine = outcome.results["alpine"]
@@ -84,7 +89,7 @@ def main() -> int:
         f"timeline={timeline['verdict']} ({timeline['coverage']})"
     )
     print(f"Outcome JSON -> {outcome_path}")
-    print(f"Figures -> {fig_path}, {puff_fig}, {descent_fig}")
+    print(f"Figures -> {fig_path}, {puff_fig}, {descent_fig}, {route_fig}")
     print(f"Provenance input_hash: {outcome.provenance.input_hash}")
     return 0 if outcome.success else 1
 

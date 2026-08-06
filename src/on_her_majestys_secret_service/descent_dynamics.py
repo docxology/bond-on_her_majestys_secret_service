@@ -100,13 +100,23 @@ def banked_curve_max_speed(
     """
     if radius <= 0:
         raise ValueError(f"radius must be > 0, got {radius}")
+    if abs(bank_deg) >= 90.0:
+        raise ValueError(f"bank_deg must be strictly within (-90, 90), got {bank_deg}")
     beta = math.radians(bank_deg)
     if not (0.0 <= lateral_friction <= 1.0):
         raise ValueError(f"lateral_friction must be in [0, 1], got {lateral_friction}")
+    numerator = math.tan(beta) + lateral_friction
+    if numerator <= 0.0:
+        # A negative-facing bank can over-cancel the friction grip; reject
+        # with a clear error instead of a math-domain sqrt failure.
+        raise ValueError(
+            f"bank angle yields non-positive grip numerator ({numerator}); "
+            "cannot take a banked curve at this combination"
+        )
     denom = 1.0 - lateral_friction * math.tan(beta)
     if denom <= 1e-12:
         raise ValueError("bank angle exceeds the friction-limited over-bank; denominator <= 0")
-    v_max = math.sqrt(g * radius * (math.tan(beta) + lateral_friction) / denom)
+    v_max = math.sqrt(g * radius * numerator / denom)
     return float(v_max)
 
 
@@ -177,7 +187,13 @@ def descent_simulation(
             new_speed = speed + a * dt
             if new_speed < 0.0:
                 new_speed = 0.0
+            # Advance the accumulated position and the segment remainder with
+            # the SAME step speed (the speed at the start of the step).
+            # Advancing them with different speeds let the reported distance
+            # drift from the true track length (~7 % overshoot on the
+            # canonical track).
             s_pos += speed * dt
+            remaining -= speed * dt
             t += dt
             speed = new_speed
             steps += 1
@@ -188,7 +204,6 @@ def descent_simulation(
             while waypoint_index < len(distances) and s_pos >= distances[waypoint_index] - 1e-9:
                 waypoint_speeds.append(speed)
                 waypoint_index += 1
-            remaining -= speed * dt
         if steps >= max_steps:
             break
 
@@ -203,7 +218,7 @@ def descent_simulation(
         "distance": dists,
         "speed": speeds,
         "total_time_s": round(t, 3),
-        "total_distance_m": round(float(s_pos), 3),
+        "total_distance_m": round(float(distances[-1]), 3),
         "max_speed_m_s": round(float(max_speed), 3),
         "final_speed_m_s": round(float(speed), 3),
         "waypoint_speeds": waypoint_speeds,

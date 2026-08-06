@@ -62,6 +62,27 @@ class TestPuffField:
         ratio = series["concentration"][-1] / plume
         assert ratio == pytest.approx(1.0, rel=0.05)
 
+    @pytest.mark.parametrize("downwind", [800.0, 1200.0, 2000.0, 3000.0])
+    def test_puff_converges_to_plume_across_downwind_range(self, downwind: float) -> None:
+        """V3: the puff train must converge to the steady plume over a range of
+        downwind distances where the release has had time to reach the
+        receptor (not just the single 2000 m case)."""
+        series = puff_field_time_series(_scenario(), downwind, 0.0, 1.5, t_end=1500.0, dt=10.0)
+        plume = centerline_concentration(downwind, _scenario())
+        ratio = series["concentration"][-1] / plume
+        assert ratio == pytest.approx(1.0, rel=0.1)
+
+    def test_puff_does_not_converge_before_transit(self) -> None:
+        """V3 negative control: at a receptor the puff train cannot yet have
+        reached within the 1500 s observation horizon (transit time >> t_end),
+        so the series must NOT match the steady plume. This proves the
+        convergence cross-check discriminates instead of passing trivially."""
+        far = 6000.0
+        series = puff_field_time_series(_scenario(), far, 0.0, 1.5, t_end=1500.0, dt=10.0)
+        plume = centerline_concentration(far, _scenario())
+        ratio = series["concentration"][-1] / plume
+        assert ratio < 0.5
+
     def test_nonnegative_dt_rejects(self) -> None:
         with pytest.raises(ValueError):
             puff_field_time_series(_scenario(), 2000.0, 0.0, 1.5, dt=0.0)
