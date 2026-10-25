@@ -34,5 +34,5 @@
     "pyyaml",
     "bond-api"
   ],
-  "codeRepository": "https://github.com/docxology/on_her_majestys_secret_service"
+  "codeRepository": "https://github.com/docxology/bond-on_her_majestys_secret_service"
 }

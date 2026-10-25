@@ -59,6 +59,7 @@ uv run mypy src/ scripts/
 Run the mission phases:
 
 ```bash
+uv run python scripts/00_preflight.py  # environment check
 uv run python scripts/01_brief.py      # mission definition
 uv run python scripts/02_recon.py      # recon findings
 uv run python scripts/03_plan.py       # execution plan
@@ -67,8 +68,9 @@ uv run python scripts/05_debrief.py    # lessons
 uv run python scripts/z_generate_manuscript_variables.py   # hydrate tokens
 ```
 
-This is a **local-only** BOND working tree: there is no remote, and nothing
-here is pushed.
+Published at `github.com/docxology/bond-on_her_majestys_secret_service` (the
+`origin` remote). The BOND package family is checked out side by side, so the
+`../bond-api` path dependency resolves without a separate install step.
 
 ## Integration
 

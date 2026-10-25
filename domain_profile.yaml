@@ -16,7 +16,7 @@ source_policy:
 
 artifact_expectations:
   - "mission outcome JSON under output/data/"
-  - "plume, puff, and descent figures under output/figures/"
+  - "plume, puff, descent, and route figures under output/figures/"
   - "manuscript variables JSON"
 
 benchmark_rubric:

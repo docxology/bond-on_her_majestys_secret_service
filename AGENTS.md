@@ -10,7 +10,9 @@ protocol and ships a pure, deterministic, mock-free scientific domain core of
 
 * Work only inside this package directory. Never touch sibling packages, bond
   root files, or the template repo.
-* **Local-only**: no remote, never push.
+* **Published, never rewritten**: `origin` is the GitHub repo
+  (`docxology/bond-on_her_majestys_secret_service`); push through the vault
+  tool, never force-push or rewrite history.
 * Path-scoped commits; `git add -A` inside this repo only.
 * **No mock framework** (no `unittest.mock`, `MagicMock`, monkey-patching).
   All tests use real data + computation.

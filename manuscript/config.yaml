@@ -1,5 +1,6 @@
 # on_her_majestys_secret_service — BOND film package (mission codename PIZ GLORIA)
-# Phase-2 film: aerosol bioweapon dispersion, alpine route planning, cover identity.
+# Six domain modules: aerosol dispersion (plume + puff), alpine routes +
+# bobsleigh descent, cover identity + timeline verification.
 # Loaded by src/on_her_majestys_secret_service/manuscript_variables.py
 # and hydrated into {{TOKEN}}s by scripts/z_generate_manuscript_variables.py.
 

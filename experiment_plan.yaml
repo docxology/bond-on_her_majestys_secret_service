@@ -26,6 +26,7 @@ expected_outputs:
     - "output/figures/aerosol_plume.png"
     - "output/figures/puff_footprint.png"
     - "output/figures/descent_profile.png"
+    - "output/figures/route_profile.png"
   data:
     - "output/data/piz_gloria_outcome.json"
     - "output/data/manuscript_variables.json"

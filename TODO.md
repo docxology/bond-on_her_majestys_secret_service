@@ -5,9 +5,12 @@ operational pillars: aerosol dispersion (steady Gaussian plume plus a Lagrangian
 descent (bobsleigh point-mass dynamics, curve physics, slope-safety-gated routing), and cover
 identity (weighted persona risk plus interval-arithmetic timeline verification).
 
-**Verified state, measured 2026-08-05:** `uv run pytest tests/ --cov=src --cov-fail-under=90` →
-**196 passed, 98.15% coverage**. ruff, `ruff format --check` and mypy clean. Six domain modules plus
-`mission.py` (frozen `bond_api.MissionProvider`) and `manuscript_variables.py`.
+**Verified state, measured 2026-10-25:** `uv run pytest tests/ --cov=src --cov-fail-under=90` →
+**205 passed, 97.84% coverage**. Six domain modules plus `mission.py` (frozen
+`bond_api.MissionProvider`) and `manuscript_variables.py`. The 2026-08-06 `ruff` / `ruff format
+--check` / `mypy` "clean" claims are **not reproducible against the locked ruff 0.16.1** — the
+formatter wants to rewrite 20 files and `ruff check` reports 51 findings — and `mypy` did not
+complete inside 500 s on an external drive. Re-verify before repeating those claims.
 
 ## Open work
 
@@ -105,18 +108,18 @@ delegate the persisted record. Note the constraint: that helper defaults `starte
 ## Verification
 
 ```bash
-cd /Users/4d/Documents/GitHub/template/projects/working/bond/on_her_majestys_secret_service
+uv sync --extra dev   # resolves the local ../bond-api path dependency
 
-uv run pytest tests/ --cov=src --cov-fail-under=90   # expect 196 passed, ~98.15%
+uv run pytest tests/ --cov=src --cov-fail-under=90   # expect 205 passed, 97.84%
 uv run ruff check src/ scripts/ tests/
 uv run ruff format --check src/ scripts/ tests/
 uv run mypy src/ scripts/                            # expect clean, 19 files
 ```
 
-Fleet-level gates run from the workspace root (`../`): `_phase_aggregate_gate.sh`,
-`_phase_docs_gate.py`, `_phase_lint_sweep.sh`, `_phase_prerender_sweep.sh`. If `uv` reports
-`Failed to initialize cache`, that is a sandbox restriction rather than a package failure — re-run
-with the sandbox disabled.
+The fleet-level gates (`_phase_aggregate_gate.sh`, `_phase_docs_gate.py`, `_phase_lint_sweep.sh`,
+`_phase_prerender_sweep.sh`) live in the sibling `bond-private` checkout, not in this repo. If `uv`
+reports `Failed to initialize cache`, that is a sandbox restriction rather than a package failure —
+re-run with the sandbox disabled.
 
 ## Round-2 (2026-08-06)
 

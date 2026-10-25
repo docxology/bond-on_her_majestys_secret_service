@@ -1,5 +1,6 @@
 # on_her_majestys_secret_service — BOND film package (PIZ GLORIA)
-# Phase-2 film package: aerosol dispersion, alpine route planning, cover identity.
+# Six pure domain modules: aerosol dispersion (plume + puff), alpine routes +
+# bobsleigh descent, cover identity + timeline verification.
 # Depends on bond-api (the frozen MissionProvider protocol) via local path source.
 
 [build-system]
@@ -32,7 +33,10 @@ dev = [
 ]
 
 [tool.uv.sources]
-bond-api = { path = "/Users/4d/Documents/GitHub/template/projects/working/bond/bond-api" }
+# FROZEN bond-api protocol (Layer 1) — local path dependency, never published.
+# Relative so the checkout works wherever the BOND package family is cloned
+# (bond-api is always a sibling of the film packages).
+bond-api = { path = "../bond-api" }
 
 [tool.pytest.ini_options]
 # RASP Strict Assertion: Tests must be clearly separated and structurally identifiable

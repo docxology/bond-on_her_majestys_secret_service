@@ -46,8 +46,9 @@ forward a number you have not just measured in this environment.
 
 ## Cross-references
 
-* Package-root guardrails (scope, local-only, no mocks, protocol stability):
+* Package-root guardrails (scope, publishing, no mocks, protocol stability):
   `../AGENTS.md`.
 * Manuscript token/figure protocol: `../manuscript/AGENTS.md`.
-* Fleet-level rules this package must satisfy: `../../SCOPE.md` §5 (Quality
-  Bar) and §7 (Verification).
+* Fleet-level rules this package must satisfy: the BOND fleet scope document
+  (`bond-private/SCOPE.md` in the package family) §5 (Quality Bar) and §7
+  (Verification).

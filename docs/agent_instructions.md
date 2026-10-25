@@ -7,8 +7,9 @@ agents working inside `on_her_majestys_secret_service`.
 
 1. **Scope**: work only inside this directory. Do not modify sibling BOND
    packages, bond root files, or the parent template repo.
-2. **Local-only**: there is no git remote. Never push. Commit path-scoped
-   (`git add -A` inside this repo only).
+2. **Published repo**: `origin` is the GitHub repo. Commit path-scoped
+   (`git add -A` inside this repo only) and never force-push or rewrite
+   history.
 3. **Deterministic**: fixed seeds; no untracked random draws; no wall-clock
    time in persisted artifacts. `run_scenario()` must return byte-identical
    results across runs.

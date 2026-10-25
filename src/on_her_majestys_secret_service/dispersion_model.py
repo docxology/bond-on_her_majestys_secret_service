@@ -39,7 +39,6 @@ from typing import Final
 __all__ = [
     "PG_OPEN_COUNTRY_Y",
     "PG_OPEN_COUNTRY_Z",
-    "STABILITY_CLASSES",
     "PlumeScenario",
     "centerline_concentration",
     "downwind_axis",
@@ -75,10 +74,6 @@ PG_OPEN_COUNTRY_Z: Final[dict[str, tuple[float, float]]] = {
     "E": (0.03, 0.67),
     "F": (0.02, 0.55),
 }
-
-#: Stability classes, ordered from most to least unstable (used for ordering /
-#: interpolation validation).
-STABILITY_CLASSES: Final[tuple[str, ...]] = ("A", "B", "C", "D", "E", "F")
 
 
 def _validate_stability(stability: str) -> None:
