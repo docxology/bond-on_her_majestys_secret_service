@@ -21,13 +21,13 @@ from on_her_majestys_secret_service.puff_dispersion import (
 
 
 def _scenario(**kwargs) -> PlumeScenario:
-    defaults = dict(
-        release_rate=0.05,
-        wind_speed=4.0,
-        release_height=25.0,
-        stability="C",
-        valley=400.0,
-    )
+    defaults = {
+        "release_rate": 0.05,
+        "wind_speed": 4.0,
+        "release_height": 25.0,
+        "stability": "C",
+        "valley": 400.0,
+    }
     defaults.update(kwargs)
     return PlumeScenario(**defaults)
 
