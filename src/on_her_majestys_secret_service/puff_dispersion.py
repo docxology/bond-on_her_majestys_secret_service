@@ -134,7 +134,7 @@ def puff_field_time_series(
 
     times: list[float] = []
     concentrations: list[float] = []
-    n = int(round((t_end - t_start) / dt))
+    n = round((t_end - t_start) / dt)
     for k in range(n + 1):
         t_obs = t_start + k * dt
         total = 0.0

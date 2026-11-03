@@ -187,8 +187,7 @@ def descent_simulation(
         while remaining > 1e-9 and steps < max_steps:
             a = G * sin_theta - friction * G * cos_theta - k * speed * speed
             new_speed = speed + a * dt
-            if new_speed < 0.0:
-                new_speed = 0.0
+            new_speed = max(new_speed, 0.0)
             # Advance the accumulated position and the segment remainder with
             # the SAME step speed (the speed at the start of the step).
             # Advancing them with different speeds let the reported distance
@@ -276,7 +275,7 @@ def canonical_bobsleigh_track() -> list[tuple[float, float, float]]:
     """
     points: list[tuple[float, float, float]] = []
     # Long straight descent, elevation 1900 -> 1700 over 500 m plan.
-    for i in range(0, 51):
+    for i in range(51):
         points.append((i * 10.0, 0.0, 1900.0 - 200.0 * (i / 50.0)))
     # Feed into a hairpin: semicircle radius 30 m, centre (530, 30).
     cx, cy, r, z = 530.0, 30.0, 30.0, 1700.0
