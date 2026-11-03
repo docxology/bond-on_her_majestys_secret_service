@@ -75,8 +75,8 @@ from on_her_majestys_secret_service.puff_dispersion import (
 __all__ = [
     "CODENAME",
     "FILM",
-    "MissionProvider",
     "REGISTRY",
+    "MissionProvider",
     "register_gadgets",
     "run_scenario",
 ]

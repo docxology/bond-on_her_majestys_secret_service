@@ -30,8 +30,8 @@ from dataclasses import dataclass
 from typing import Any, Final, cast
 
 __all__ = [
-    "GRADE_SAFE",
     "GRADE_MARGINAL",
+    "GRADE_SAFE",
     "GRADE_UNSAFE",
     "RoutePoint",
     "SafetyVerdict",
