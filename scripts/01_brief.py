@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# ruff: noqa: N999
+# The numbered name `01_brief` is the documented phase interface (AGENTS.md,
+# README.md and the skill); renaming the file would break the documented
+# invocation, so the name is kept and the finding is ignored here.
 """Thin orchestrator: PIZ GLORIA mission phase 01 — brief.
 
 Usage:
