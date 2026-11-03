@@ -34,11 +34,13 @@ from bond_api.protocol import (
     MissionBrief,
     MissionOutcome,
     MissionPlan,
-    MissionProvider as MissionProviderProtocol,
     Provenance,
     ReconReport,
     ReconRequest,
     Step,
+)
+from bond_api.protocol import (
+    MissionProvider as MissionProviderProtocol,
 )
 from bond_api.registry import GadgetRegistry
 

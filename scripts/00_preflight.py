@@ -20,6 +20,7 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 import bond_api
+
 from on_her_majestys_secret_service.mission import CODENAME, FILM, MissionProvider
 
 

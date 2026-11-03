@@ -5,16 +5,17 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-
 from bond_api.discovery import load_provider
 from bond_api.protocol import (
     MissionBrief,
     MissionOutcome,
     MissionPlan,
-    MissionProvider as Protocol,
     ReconReport,
     ReconRequest,
     run_mission,
+)
+from bond_api.protocol import (
+    MissionProvider as Protocol,
 )
 from bond_api.registry import GadgetRegistry
 from bond_api.serialization import from_json, to_json
