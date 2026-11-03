@@ -108,7 +108,12 @@ class TestResolveTree:
         md.mkdir()
         (md / "01_bogus.md").write_text("value is {{NOT_A_TOKEN}}\n", encoding="utf-8")
         with pytest.raises(ValueError):
-            resolve_manuscript_tree({"KNOWN": "x"}, manuscript_dir=md, output_dir=tmp_path / "o", strict=True)
+            resolve_manuscript_tree(
+                {"KNOWN": "x"},
+                manuscript_dir=md,
+                output_dir=tmp_path / "o",
+                strict=True,
+            )
 
 
 class TestLiveCrossReference:
@@ -161,11 +166,15 @@ class TestRegenerationDeterminism:
         differing = {k for k in first if first[k] != second.get(k)}
         assert not differing, f"tokens changed between runs: {sorted(differing)}"
 
-    def test_resolved_manuscript_tree_is_byte_identical_across_runs(self, tmp_path) -> None:
+    def test_resolved_manuscript_tree_is_byte_identical_across_runs(
+        self, tmp_path
+    ) -> None:
         manuscript_dir = PACKAGE_ROOT / "manuscript"
 
         def render(target):
-            resolve_manuscript_tree(generate_variables(), manuscript_dir=manuscript_dir, output_dir=target)
+            resolve_manuscript_tree(
+                generate_variables(), manuscript_dir=manuscript_dir, output_dir=target
+            )
             return {p.name: p.read_bytes() for p in sorted(target.glob("*.md"))}
 
         first = render(tmp_path / "run1")

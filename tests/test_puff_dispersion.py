@@ -6,7 +6,10 @@ import math
 
 import pytest
 
-from on_her_majestys_secret_service.dispersion_model import PlumeScenario, centerline_concentration
+from on_her_majestys_secret_service.dispersion_model import (
+    PlumeScenario,
+    centerline_concentration,
+)
 from on_her_majestys_secret_service.puff_dispersion import (
     arrival_time,
     integrated_exposure,
@@ -18,7 +21,13 @@ from on_her_majestys_secret_service.puff_dispersion import (
 
 
 def _scenario(**kwargs) -> PlumeScenario:
-    defaults = dict(release_rate=0.05, wind_speed=4.0, release_height=25.0, stability="C", valley=400.0)
+    defaults = dict(
+        release_rate=0.05,
+        wind_speed=4.0,
+        release_height=25.0,
+        stability="C",
+        valley=400.0,
+    )
     defaults.update(kwargs)
     return PlumeScenario(**defaults)
 
@@ -29,13 +38,45 @@ def _series() -> dict[str, list[float]]:
 
 class TestSinglePuff:
     def test_peak_when_puff_centred(self) -> None:
-        c_centre = single_puff(0.5, dx=0.0, dy=0.0, z_r=1.5, release_height=25.0, sigma_h=20.0, sigma_z=10.0)
-        c_offset = single_puff(0.5, dx=50.0, dy=0.0, z_r=1.5, release_height=25.0, sigma_h=20.0, sigma_z=10.0)
+        c_centre = single_puff(
+            0.5,
+            dx=0.0,
+            dy=0.0,
+            z_r=1.5,
+            release_height=25.0,
+            sigma_h=20.0,
+            sigma_z=10.0,
+        )
+        c_offset = single_puff(
+            0.5,
+            dx=50.0,
+            dy=0.0,
+            z_r=1.5,
+            release_height=25.0,
+            sigma_h=20.0,
+            sigma_z=10.0,
+        )
         assert c_centre > c_offset > 0.0
 
     def test_symmetric_in_dx(self) -> None:
-        a = single_puff(0.5, dx=30.0, dy=0.0, z_r=1.5, release_height=25.0, sigma_h=20.0, sigma_z=10.0)
-        b = single_puff(0.5, dx=-30.0, dy=0.0, z_r=1.5, release_height=25.0, sigma_h=20.0, sigma_z=10.0)
+        a = single_puff(
+            0.5,
+            dx=30.0,
+            dy=0.0,
+            z_r=1.5,
+            release_height=25.0,
+            sigma_h=20.0,
+            sigma_z=10.0,
+        )
+        b = single_puff(
+            0.5,
+            dx=-30.0,
+            dy=0.0,
+            z_r=1.5,
+            release_height=25.0,
+            sigma_h=20.0,
+            sigma_z=10.0,
+        )
         assert a == pytest.approx(b)
 
     def test_zero_mass_or_zero_sigma(self) -> None:
@@ -63,11 +104,15 @@ class TestPuffField:
         assert ratio == pytest.approx(1.0, rel=0.05)
 
     @pytest.mark.parametrize("downwind", [800.0, 1200.0, 2000.0, 3000.0])
-    def test_puff_converges_to_plume_across_downwind_range(self, downwind: float) -> None:
+    def test_puff_converges_to_plume_across_downwind_range(
+        self, downwind: float
+    ) -> None:
         """V3: the puff train must converge to the steady plume over a range of
         downwind distances where the release has had time to reach the
         receptor (not just the single 2000 m case)."""
-        series = puff_field_time_series(_scenario(), downwind, 0.0, 1.5, t_end=1500.0, dt=10.0)
+        series = puff_field_time_series(
+            _scenario(), downwind, 0.0, 1.5, t_end=1500.0, dt=10.0
+        )
         plume = centerline_concentration(downwind, _scenario())
         ratio = series["concentration"][-1] / plume
         assert ratio == pytest.approx(1.0, rel=0.1)
@@ -78,7 +123,9 @@ class TestPuffField:
         so the series must NOT match the steady plume. This proves the
         convergence cross-check discriminates instead of passing trivially."""
         far = 6000.0
-        series = puff_field_time_series(_scenario(), far, 0.0, 1.5, t_end=1500.0, dt=10.0)
+        series = puff_field_time_series(
+            _scenario(), far, 0.0, 1.5, t_end=1500.0, dt=10.0
+        )
         plume = centerline_concentration(far, _scenario())
         ratio = series["concentration"][-1] / plume
         assert ratio < 0.5
@@ -89,7 +136,9 @@ class TestPuffField:
 
     def test_inverted_window_rejects(self) -> None:
         with pytest.raises(ValueError):
-            puff_field_time_series(_scenario(), 2000.0, 0.0, 1.5, t_end=100.0, t_start=500.0)
+            puff_field_time_series(
+                _scenario(), 2000.0, 0.0, 1.5, t_end=100.0, t_start=500.0
+            )
 
     def test_negative_receptor_rejects(self) -> None:
         with pytest.raises(ValueError):

@@ -24,7 +24,13 @@ from on_her_majestys_secret_service.dispersion_model import (
 
 
 def _scenario(**kwargs) -> PlumeScenario:
-    defaults = dict(release_rate=0.05, wind_speed=4.0, release_height=25.0, stability="D", valley=400.0)
+    defaults = dict(
+        release_rate=0.05,
+        wind_speed=4.0,
+        release_height=25.0,
+        stability="D",
+        valley=400.0,
+    )
     defaults.update(kwargs)
     return PlumeScenario(**defaults)
 
@@ -108,7 +114,9 @@ class TestValleyWindFactor:
 
     def test_approaches_one_at_high_elevation(self) -> None:
         assert valley_wind_factor(1e6, 400.0) == pytest.approx(1.0, abs=1e-9)
-        assert valley_wind_factor(200.0, 400.0) == pytest.approx(1.0 - 0.4 * math.exp(-0.5))
+        assert valley_wind_factor(200.0, 400.0) == pytest.approx(
+            1.0 - 0.4 * math.exp(-0.5)
+        )
 
     def test_monotonic_in_elevation(self) -> None:
         f0 = valley_wind_factor(0.0, 100.0)
@@ -148,12 +156,16 @@ class TestConcentration:
     def test_inverse_with_wind_speed(self) -> None:
         slow = _scenario(wind_speed=2.0)
         fast = _scenario(wind_speed=8.0)
-        assert centerline_concentration(1000.0, slow) > centerline_concentration(1000.0, fast)
+        assert centerline_concentration(1000.0, slow) > centerline_concentration(
+            1000.0, fast
+        )
 
     def test_proportional_to_release_rate(self) -> None:
         low = _scenario(release_rate=0.02)
         high = _scenario(release_rate=0.08)
-        assert centerline_concentration(1000.0, high) > centerline_concentration(1000.0, low)
+        assert centerline_concentration(1000.0, high) > centerline_concentration(
+            1000.0, low
+        )
 
     def test_ground_level_wrapper(self) -> None:
         s = _scenario()
@@ -200,7 +212,9 @@ class TestDownwindAxis:
 class TestIsopleth:
     def test_lower_threshold_reaches_farther(self) -> None:
         s = _scenario()
-        assert isopleth_distance(1e-6, s, max_distance=50000.0) < isopleth_distance(1e-8, s, max_distance=50000.0)
+        assert isopleth_distance(1e-6, s, max_distance=50000.0) < isopleth_distance(
+            1e-8, s, max_distance=50000.0
+        )
 
     def test_unreachable_threshold_returns_zero(self) -> None:
         s = _scenario()

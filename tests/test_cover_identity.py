@@ -70,7 +70,9 @@ class TestCoverScore:
 
     def test_custom_weights(self) -> None:
         custom = {"documentation": 1.0, "linguistic_fit": 1.0}
-        score = cover_score({"documentation": 0.0, "linguistic_fit": 1.0}, weights=custom)
+        score = cover_score(
+            {"documentation": 0.0, "linguistic_fit": 1.0}, weights=custom
+        )
         assert score == pytest.approx(0.5)
 
 
@@ -96,7 +98,9 @@ class TestBreachScenario:
 
     def test_verdict_transition_recorded(self) -> None:
         result = breach_scenario(_clean, breached_attributes={"forensic_overlap": 1.0})
-        assert result["verdict_after"] >= result["verdict_before"] or isinstance(result["verdict_after"], str)
+        assert result["verdict_after"] >= result["verdict_before"] or isinstance(
+            result["verdict_after"], str
+        )
 
     def test_no_breach_is_identity(self) -> None:
         result = breach_scenario(_clean)

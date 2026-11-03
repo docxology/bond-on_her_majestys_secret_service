@@ -58,7 +58,9 @@ class TimelineEvent:
         if self.start < 0:
             raise ValueError(f"event start must be >= 0, got {self.start}")
         if self.end < self.start:
-            raise ValueError(f"event end must be >= start ({self.start}), got {self.end}")
+            raise ValueError(
+                f"event end must be >= start ({self.start}), got {self.end}"
+            )
         if not self.location.strip():
             raise ValueError("event location must be a non-empty string")
 
@@ -68,7 +70,9 @@ def _overlap(a: TimelineEvent, b: TimelineEvent) -> float:
     return max(0.0, min(a.end, b.end) - max(a.start, b.start))
 
 
-def total_observed_minutes(observations: tuple[TimelineEvent, ...] | list[TimelineEvent]) -> float:
+def total_observed_minutes(
+    observations: tuple[TimelineEvent, ...] | list[TimelineEvent],
+) -> float:
     """Total audited minutes across all observations (union-free sum)."""
     return float(sum(event.end - event.start for event in observations))
 

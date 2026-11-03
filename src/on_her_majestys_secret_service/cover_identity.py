@@ -93,7 +93,9 @@ def attribute_risk(attribute: str, evidence: float) -> float:
         ValueError: for an unknown attribute or out-of-range evidence.
     """
     if attribute not in _EVIDENCE_MODEL:
-        raise ValueError(f"unknown attribute {attribute!r}; expected one of {sorted(BRAY_WEIGHTS)}")
+        raise ValueError(
+            f"unknown attribute {attribute!r}; expected one of {sorted(BRAY_WEIGHTS)}"
+        )
     if not (0.0 <= evidence <= 1.0):
         raise ValueError(f"evidence must be in [0, 1], got {evidence}")
     model = _EVIDENCE_MODEL[attribute]
@@ -101,7 +103,9 @@ def attribute_risk(attribute: str, evidence: float) -> float:
     return max(0.0, min(1.0, raw))
 
 
-def cover_score(profile: dict[str, float], weights: dict[str, float] | None = None) -> float:
+def cover_score(
+    profile: dict[str, float], weights: dict[str, float] | None = None
+) -> float:
     """Aggregate weighted-mean cover risk across an attribute profile.
 
     Args:

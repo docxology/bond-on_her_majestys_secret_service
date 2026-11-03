@@ -31,7 +31,9 @@ def main() -> int:
     print(f"Python {platform.python_version()} on {platform.platform()}")
     print(f"Objectives ({len(brief.objectives)}): {', '.join(brief.objectives)}")
     print(f"Assets ({len(brief.assets)}): {', '.join(a.name for a in brief.assets)}")
-    print(f"Constraints ({len(brief.constraints)}): {', '.join(c.kind for c in brief.constraints)}")
+    print(
+        f"Constraints ({len(brief.constraints)}): {', '.join(c.kind for c in brief.constraints)}"
+    )
     return 0
 
 

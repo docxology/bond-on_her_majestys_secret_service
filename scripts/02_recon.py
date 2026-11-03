@@ -24,7 +24,11 @@ from on_her_majestys_secret_service.mission import MissionProvider  # noqa: E402
 
 
 def main() -> int:
-    goal = " ".join(sys.argv[1:]) if len(sys.argv) > 1 else "survey available models and constraints"
+    goal = (
+        " ".join(sys.argv[1:])
+        if len(sys.argv) > 1
+        else "survey available models and constraints"
+    )
     report = MissionProvider().recon(ReconRequest(goal=goal))
     print(f"Recon goal: {goal}")
     print(f"Findings ({len(report.findings)}):")

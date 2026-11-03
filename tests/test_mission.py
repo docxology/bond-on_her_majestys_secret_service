@@ -41,7 +41,9 @@ class TestBrief:
         assert brief.film == FILM
         assert brief.codename == CODENAME
 
-    def test_six_objectives_and_two_constraints(self, provider: MissionProvider) -> None:
+    def test_six_objectives_and_two_constraints(
+        self, provider: MissionProvider
+    ) -> None:
         brief = provider.brief()
         assert len(brief.objectives) == 6
         assert len(brief.assets) == 6
@@ -79,7 +81,9 @@ class TestExecute:
         assert a.results == b.results
         assert a.provenance.input_hash == b.provenance.input_hash
 
-    def test_provenance_records_version_seed_hash(self, provider: MissionProvider) -> None:
+    def test_provenance_records_version_seed_hash(
+        self, provider: MissionProvider
+    ) -> None:
         outcome = provider.execute(provider.plan(provider.brief()))
         assert outcome.provenance.package_version == "0.1.0"
         assert outcome.provenance.seed == 7

@@ -74,7 +74,9 @@ def main() -> int:
         f"Isopleth reach: {disp['isopleth_reach_m']} m · peak {disp['peak_concentration_kg_m3']} "
         f"kg/m3 at {disp['peak_distance_m']} m"
     )
-    print(f"Puff arrival at {puff['arrival_time_s']} s · peak {puff['peak_concentration_kg_m3']} kg/m3")
+    print(
+        f"Puff arrival at {puff['arrival_time_s']} s · peak {puff['peak_concentration_kg_m3']} kg/m3"
+    )
     print(
         f"Alpine route: found={alpine['route_found']} distance={alpine['route_distance_m']} m "
         f"mean_grade={alpine['route_mean_grade_deg']} deg safe={alpine['route_safe']}"

@@ -30,10 +30,18 @@ from on_her_majestys_secret_service.manuscript_variables import (  # noqa: E402
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--allow-draft", action="store_true", help="write even if tokens remain unresolved")
+    parser.add_argument(
+        "--allow-draft",
+        action="store_true",
+        help="write even if tokens remain unresolved",
+    )
     parser.add_argument("--config", default=None, help="path to manuscript/config.yaml")
-    parser.add_argument("--manuscript-dir", default=None, help="manuscript source directory")
-    parser.add_argument("--output-dir", default=None, help="output directory (default: <root>/output)")
+    parser.add_argument(
+        "--manuscript-dir", default=None, help="manuscript source directory"
+    )
+    parser.add_argument(
+        "--output-dir", default=None, help="output directory (default: <root>/output)"
+    )
     args = parser.parse_args()
 
     redo = args.allow_draft
@@ -42,7 +50,9 @@ def main() -> int:
 
     variables_path = output_root / "data" / "manuscript_variables.json"
     variables_path.parent.mkdir(parents=True, exist_ok=True)
-    variables_path.write_text(json.dumps(variables, sort_keys=True, indent=2), encoding="utf-8")
+    variables_path.write_text(
+        json.dumps(variables, sort_keys=True, indent=2), encoding="utf-8"
+    )
 
     resolve_manuscript_tree(
         variables,

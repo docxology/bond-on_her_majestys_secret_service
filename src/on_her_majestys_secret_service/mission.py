@@ -42,7 +42,10 @@ from bond_api.protocol import (
 )
 from bond_api.registry import GadgetRegistry
 
-from on_her_majestys_secret_service.alpine_routes import alpine_elevation, plan_safe_route
+from on_her_majestys_secret_service.alpine_routes import (
+    alpine_elevation,
+    plan_safe_route,
+)
 from on_her_majestys_secret_service.cover_identity import bray_persona, cover_score
 from on_her_majestys_secret_service.descent_dynamics import (
     banked_curve_max_speed,
@@ -67,7 +70,14 @@ from on_her_majestys_secret_service.puff_dispersion import (
     puff_field_time_series,
 )
 
-__all__ = ["CODENAME", "FILM", "MissionProvider", "REGISTRY", "register_gadgets", "run_scenario"]
+__all__ = [
+    "CODENAME",
+    "FILM",
+    "MissionProvider",
+    "REGISTRY",
+    "register_gadgets",
+    "run_scenario",
+]
 
 #: Film slug — the top-level import name under which the orchestrator
 #: discovers this package (``import on_her_majestys_secret_service.mission``).
@@ -151,7 +161,9 @@ def run_scenario() -> dict[str, Any]:
             "peak_distance_m": round(float(peak_x), 2),
             "scenario_stability": SCENARIO.stability,
             "puff": {
-                "arrival_time_s": float(puff_arrival) if puff_arrival is not None else None,
+                "arrival_time_s": float(puff_arrival)
+                if puff_arrival is not None
+                else None,
                 "peak_concentration_kg_m3": round(float(max(puff_conc)), 12),
                 "steady_concentration_kg_m3": round(float(puff_conc[-1]), 12),
             },
@@ -178,7 +190,9 @@ def run_scenario() -> dict[str, Any]:
         "cover": {
             "bray_score": persona["score"],
             "bray_verdict": persona["verdict"],
-            "forensic_overlap_risk": round(float(persona["profile"]["forensic_overlap"]), 6),
+            "forensic_overlap_risk": round(
+                float(persona["profile"]["forensic_overlap"]), 6
+            ),
             "timeline": {
                 "coverage": float(timeline["coverage"]),
                 "conflicts": int(timeline["conflicts"]),
@@ -200,7 +214,9 @@ def _input_hash() -> str:
         "seed": SEED,
         "version": PACKAGE_VERSION,
     }
-    return hashlib.sha256(json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
+    return hashlib.sha256(
+        json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    ).hexdigest()
 
 
 class MissionProvider(MissionProviderProtocol):  # noqa: N801 — name fixed by discovery contract
@@ -222,16 +238,41 @@ class MissionProvider(MissionProviderProtocol):  # noqa: N801 — name fixed by 
                 "verify the Bray timeline against observed sightings",
             ),
             assets=(
-                Asset(kind="model", name="dispersion", payload={"scenario": "gaussian-plume"}),
-                Asset(kind="model", name="puff-dispersion", payload={"model": "lagrangian-gaussian"}),
-                Asset(kind="model", name="alpine-routes", payload={"planner": "dijkstra-safe"}),
-                Asset(kind="model", name="descent-dynamics", payload={"model": "point-mass-bobsleigh"}),
+                Asset(
+                    kind="model",
+                    name="dispersion",
+                    payload={"scenario": "gaussian-plume"},
+                ),
+                Asset(
+                    kind="model",
+                    name="puff-dispersion",
+                    payload={"model": "lagrangian-gaussian"},
+                ),
+                Asset(
+                    kind="model",
+                    name="alpine-routes",
+                    payload={"planner": "dijkstra-safe"},
+                ),
+                Asset(
+                    kind="model",
+                    name="descent-dynamics",
+                    payload={"model": "point-mass-bobsleigh"},
+                ),
                 Asset(kind="model", name="cover-identity", payload={"persona": "bray"}),
-                Asset(kind="model", name="identity-timeline", payload={"method": "interval-verification"}),
+                Asset(
+                    kind="model",
+                    name="identity-timeline",
+                    payload={"method": "interval-verification"},
+                ),
             ),
             constraints=(
-                Constraint(kind="determinism", detail="no random draws, no external calls"),
-                Constraint(kind="real-data", detail="results computed from real domain functions"),
+                Constraint(
+                    kind="determinism", detail="no random draws, no external calls"
+                ),
+                Constraint(
+                    kind="real-data",
+                    detail="results computed from real domain functions",
+                ),
             ),
         )
 
@@ -240,9 +281,18 @@ class MissionProvider(MissionProviderProtocol):  # noqa: N801 — name fixed by 
         return ReconReport(
             findings=(
                 Finding(label="goal", detail=request.goal),
-                Finding(label="dispersion", detail="Gaussian plume + valley channeling + puff dynamics"),
-                Finding(label="alpine", detail="Dijkstra safe-route planner + bobsleigh descent dynamics"),
-                Finding(label="cover", detail="weighted Bray-persona risk + timeline verification"),
+                Finding(
+                    label="dispersion",
+                    detail="Gaussian plume + valley channeling + puff dynamics",
+                ),
+                Finding(
+                    label="alpine",
+                    detail="Dijkstra safe-route planner + bobsleigh descent dynamics",
+                ),
+                Finding(
+                    label="cover",
+                    detail="weighted Bray-persona risk + timeline verification",
+                ),
             )
         )
 
@@ -255,11 +305,25 @@ class MissionProvider(MissionProviderProtocol):  # noqa: N801 — name fixed by 
                     action="compute_plume_footprint",
                     params={"objective": len(brief.objectives)},
                 ),
-                Step(name="puff", action="resolve_puff_time_series", params={"receptor_x": PUFF_RECEPTOR_X}),
-                Step(name="alpine", action="plan_safe_route", params={"max_slope": 30.0}),
+                Step(
+                    name="puff",
+                    action="resolve_puff_time_series",
+                    params={"receptor_x": PUFF_RECEPTOR_X},
+                ),
+                Step(
+                    name="alpine", action="plan_safe_route", params={"max_slope": 30.0}
+                ),
                 Step(name="descent", action="simulate_descent", params={"mass": 100.0}),
-                Step(name="cover", action="score_cover_identity", params={"persona": "bray"}),
-                Step(name="timeline", action="verify_cover_timeline", params={"method": "interval"}),
+                Step(
+                    name="cover",
+                    action="score_cover_identity",
+                    params={"persona": "bray"},
+                ),
+                Step(
+                    name="timeline",
+                    action="verify_cover_timeline",
+                    params={"method": "interval"},
+                ),
             )
         )
 

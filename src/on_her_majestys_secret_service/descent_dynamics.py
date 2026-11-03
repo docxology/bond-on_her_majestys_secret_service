@@ -115,7 +115,9 @@ def banked_curve_max_speed(
         )
     denom = 1.0 - lateral_friction * math.tan(beta)
     if denom <= 1e-12:
-        raise ValueError("bank angle exceeds the friction-limited over-bank; denominator <= 0")
+        raise ValueError(
+            "bank angle exceeds the friction-limited over-bank; denominator <= 0"
+        )
     v_max = math.sqrt(g * radius * numerator / denom)
     return float(v_max)
 
@@ -201,7 +203,10 @@ def descent_simulation(
             dists.append(round(s_pos, 4))
             speeds.append(round(speed, 6))
             # Capture speed whenever we pass a waypoint.
-            while waypoint_index < len(distances) and s_pos >= distances[waypoint_index] - 1e-9:
+            while (
+                waypoint_index < len(distances)
+                and s_pos >= distances[waypoint_index] - 1e-9
+            ):
                 waypoint_speeds.append(speed)
                 waypoint_index += 1
         if steps >= max_steps:
@@ -246,13 +251,19 @@ def track_curvature_audit(
     sim = descent_simulation(points, **descent_kwargs)
     radii = curve_radii(points)
     waypoint_speeds = sim["waypoint_speeds"]
-    laterals = [lateral_gaccel(waypoint_speeds[i], radii[i - 1]) for i in range(1, len(points) - 1)]
+    laterals = [
+        lateral_gaccel(waypoint_speeds[i], radii[i - 1])
+        for i in range(1, len(points) - 1)
+    ]
     return {
         "lateral_g": laterals,
         "max_lateral_g": round(max(laterals), 4) if laterals else 0.0,
         "over_g": sum(1 for v in laterals if v > max_g),
         "safe": all(v <= max_g for v in laterals),
-        "descent": {k: sim[k] for k in ("total_time_s", "max_speed_m_s", "final_speed_m_s", "completed")},
+        "descent": {
+            k: sim[k]
+            for k in ("total_time_s", "max_speed_m_s", "final_speed_m_s", "completed")
+        },
     }
 
 

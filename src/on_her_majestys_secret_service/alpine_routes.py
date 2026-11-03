@@ -212,7 +212,9 @@ def route_safety_report(
         a, b = points[i], points[i + 1]
         next_p = points[i + 2] if i + 2 < len(points) else None
         prev = points[i - 1] if i > 0 else None
-        verdict = classify_segment(a, b, curvature=next_p, context=prev, max_curvature=max_curvature)
+        verdict = classify_segment(
+            a, b, curvature=next_p, context=prev, max_curvature=max_curvature
+        )
         max_grade = max(max_grade, verdict.grade_deg)
         max_curv = max(max_curv, verdict.curvature)
         if not verdict.safe:
@@ -247,7 +249,9 @@ def alpine_elevation(easting: float, northing: float) -> float:
     navigate in tests. The gradient magnitude stays well below an impassable
     cliff so the planner always has a feasible route.
     """
-    return 1500.0 + 220.0 * math.sin(northing / 180.0) + 120.0 * math.sin(easting / 240.0)
+    return (
+        1500.0 + 220.0 * math.sin(northing / 180.0) + 120.0 * math.sin(easting / 240.0)
+    )
 
 
 def plan_safe_route(
@@ -287,7 +291,9 @@ def plan_safe_route(
     cell = 100.0  # metres per grid cell (a 10 km x 10 km range)
 
     def point(r: int, c: int) -> RoutePoint:
-        return RoutePoint(easting=c * cell, northing=r * cell, elevation=elev(c * cell, r * cell))
+        return RoutePoint(
+            easting=c * cell, northing=r * cell, elevation=elev(c * cell, r * cell)
+        )
 
     # (cost, row, col, came_from)
     best: dict[tuple[int, int], float] = {start: 0.0}
@@ -320,7 +326,14 @@ def plan_safe_route(
                 prev[nkey] = (r, c)
                 heapq.heappush(frontier, (new_cost, nr, nc))
     else:
-        return {"found": False, "path": [], "waypoints": [], "distance": 0.0, "mean_grade_deg": 0.0, "safe": False}
+        return {
+            "found": False,
+            "path": [],
+            "waypoints": [],
+            "distance": 0.0,
+            "mean_grade_deg": 0.0,
+            "safe": False,
+        }
 
     # Reconstruct path.
     cells: list[tuple[int, int]] = []
@@ -331,8 +344,12 @@ def plan_safe_route(
     cells.append(start)
     cells.reverse()
 
-    waypoints = [[p.easting, p.northing, p.elevation] for p in (point(r, c) for r, c in cells)]
-    safety = cast("dict[str, Any]", route_safety_report([point(r, c) for r, c in cells]))
+    waypoints = [
+        [p.easting, p.northing, p.elevation] for p in (point(r, c) for r, c in cells)
+    ]
+    safety = cast(
+        "dict[str, Any]", route_safety_report([point(r, c) for r, c in cells])
+    )
     return {
         "found": True,
         "path": cells,

@@ -78,7 +78,9 @@ PG_OPEN_COUNTRY_Z: Final[dict[str, tuple[float, float]]] = {
 
 def _validate_stability(stability: str) -> None:
     if stability not in PG_OPEN_COUNTRY_Y:
-        raise ValueError(f"unknown stability class {stability!r}; expected one of {list(PG_OPEN_COUNTRY_Y)}")
+        raise ValueError(
+            f"unknown stability class {stability!r}; expected one of {list(PG_OPEN_COUNTRY_Y)}"
+        )
 
 
 def pasquill_sigma(x: float, stability: str) -> tuple[float, float]:
@@ -148,7 +150,9 @@ class PlumeScenario:
         return self.wind_speed * valley_wind_factor(elevation, self.valley)
 
 
-def valley_wind_factor(elevation: float, valley_depth: float, floor_factor: float = 0.6) -> float:
+def valley_wind_factor(
+    elevation: float, valley_depth: float, floor_factor: float = 0.6
+) -> float:
     """Valley-channeling factor in ``(0, 1]`` for a given elevation.
 
     Channeling slows the wind most at the valley floor (factor ``floor_factor``)
@@ -211,7 +215,9 @@ def point_concentration(
     return q / (2.0 * math.pi * u * sigma_y * sigma_z) * term_y * term_z
 
 
-def centerline_concentration(x: float, scenario: PlumeScenario, *, elevation: float = 0.0) -> float:
+def centerline_concentration(
+    x: float, scenario: PlumeScenario, *, elevation: float = 0.0
+) -> float:
     """Downwind centerline concentration at ground level (y=0, z=0)."""
     return point_concentration(x, 0.0, 0.0, scenario, elevation=elevation)
 
@@ -278,7 +284,9 @@ def downwind_axis(
     if steps <= 0:
         raise ValueError(f"steps must be > 0, got {steps}")
     distances = [x_start + (x_end - x_start) * i / steps for i in range(steps + 1)]
-    concentrations = [centerline_concentration(x, scenario, elevation=elevation) for x in distances]
+    concentrations = [
+        centerline_concentration(x, scenario, elevation=elevation) for x in distances
+    ]
     return {"distance": distances, "concentration": concentrations}
 
 

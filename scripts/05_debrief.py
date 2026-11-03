@@ -23,7 +23,9 @@ from on_her_majestys_secret_service.mission import MissionProvider  # noqa: E402
 
 
 def main() -> int:
-    debrief = run_mission(MissionProvider(), ReconRequest(goal="debrief the PIZ GLORIA mission"))
+    debrief = run_mission(
+        MissionProvider(), ReconRequest(goal="debrief the PIZ GLORIA mission")
+    )
     print(f"Mission success: {debrief.outcome.success}")
     print(f"Lessons ({len(debrief.lessons)}):")
     for lesson in debrief.lessons:

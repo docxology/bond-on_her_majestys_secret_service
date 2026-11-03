@@ -18,7 +18,11 @@ from typing import Any
 import numpy as np
 import yaml
 
-from on_her_majestys_secret_service.mission import CODENAME, PACKAGE_VERSION, run_scenario
+from on_her_majestys_secret_service.mission import (
+    CODENAME,
+    PACKAGE_VERSION,
+    run_scenario,
+)
 
 __all__ = ["generate_variables", "load_manuscript_config", "resolve_manuscript_tree"]
 
@@ -36,7 +40,9 @@ def load_manuscript_config(config_path: str | Path | None = None) -> dict[str, A
     with path.open("r", encoding="utf-8") as handle:
         data = yaml.safe_load(handle)
     if not isinstance(data, dict):
-        raise ValueError(f"manuscript config must be a top-level mapping, got {type(data).__name__}")
+        raise ValueError(
+            f"manuscript config must be a top-level mapping, got {type(data).__name__}"
+        )
     return data
 
 
@@ -52,11 +58,15 @@ def edition_stamp(paper: dict[str, Any]) -> str:
     """
     date = str(paper.get("date", "")).strip()
     if not date:
-        raise ValueError("manuscript config 'paper.date' is required for a deterministic edition stamp")
+        raise ValueError(
+            "manuscript config 'paper.date' is required for a deterministic edition stamp"
+        )
     try:
         parsed = datetime.strptime(date, "%Y-%m-%d").replace(tzinfo=timezone.utc)
     except ValueError as exc:
-        raise ValueError(f"manuscript config 'paper.date' must be YYYY-MM-DD, got {date!r}") from exc
+        raise ValueError(
+            f"manuscript config 'paper.date' must be YYYY-MM-DD, got {date!r}"
+        ) from exc
     return parsed.isoformat(timespec="seconds")
 
 
@@ -95,7 +105,11 @@ def generate_variables(
         route_safe = "safe" if alpine["route_safe"] else "unsafe"
         bray_score = f"{cover['bray_score']:.3f}"
         bray_verdict = cover["bray_verdict"]
-        puff_arrival = "N/A" if puff["arrival_time_s"] is None else f"{puff['arrival_time_s']:.0f} s"
+        puff_arrival = (
+            "N/A"
+            if puff["arrival_time_s"] is None
+            else f"{puff['arrival_time_s']:.0f} s"
+        )
         puff_peak = f"{puff['peak_concentration_kg_m3']:.3e} kg m$^{{-3}}$"
         descent_time = f"{descent['total_time_s']:.1f} s"
         descent_speed = f"{descent['max_speed_m_s']:.1f} m/s"
@@ -170,8 +184,16 @@ def resolve_manuscript_tree(
 
     Returns the output directory and the sorted list of resolved file names.
     """
-    manuscript_dir = Path(manuscript_dir) if manuscript_dir is not None else PACKAGE_ROOT / "manuscript"
-    output_dir = Path(output_dir) if output_dir is not None else PACKAGE_ROOT / "output" / "manuscript"
+    manuscript_dir = (
+        Path(manuscript_dir)
+        if manuscript_dir is not None
+        else PACKAGE_ROOT / "manuscript"
+    )
+    output_dir = (
+        Path(output_dir)
+        if output_dir is not None
+        else PACKAGE_ROOT / "output" / "manuscript"
+    )
     resolved: list[str] = []
     for source in sorted(manuscript_dir.glob("[0-9][0-9]_*.md")):
         text = source.read_text(encoding="utf-8")
@@ -179,7 +201,9 @@ def resolve_manuscript_tree(
             text = text.replace("{{" + token + "}}", value)
         unresolved = sorted(set(_TOKEN_RE.findall(text)))
         if unresolved and strict:
-            raise ValueError(f"unresolved manuscript tokens in {source.name}: {unresolved}")
+            raise ValueError(
+                f"unresolved manuscript tokens in {source.name}: {unresolved}"
+            )
         output_dir.mkdir(parents=True, exist_ok=True)
         (output_dir / source.name).write_text(text, encoding="utf-8")
         resolved.append(source.name)
