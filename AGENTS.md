@@ -56,8 +56,8 @@ alpine planner, descent, bobsleigh audit, cover risk, timeline verifier) into a
 uv run python -m pytest tests/ --cov=src --cov-fail-under=90 -q
 uv run ruff check src/ scripts/ tests/ && uv run ruff format --check src/ scripts/ tests/
 uv run mypy src/ scripts/
-# lineage: no exemplar strings
-rg -n "template_?" . --glob '!uv.lock' --glob '!.git/**' || echo Clean
+# lineage: no exemplar strings in code, config or data; prose may name the check
+rg -n "template_?" . --glob '*.py' --glob '*.yaml' --glob '*.yml' --glob '*.json' --glob '*.toml' --glob '!.git/**' || echo Clean
 git status --short   # clean after commit
 ```
 
