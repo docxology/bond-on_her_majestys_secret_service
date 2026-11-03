@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import platform
 import re
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -62,7 +62,7 @@ def edition_stamp(paper: dict[str, Any]) -> str:
             "manuscript config 'paper.date' is required for a deterministic edition stamp"
         )
     try:
-        parsed = datetime.strptime(date, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+        parsed = datetime.strptime(date, "%Y-%m-%d").replace(tzinfo=UTC)
     except ValueError as exc:
         raise ValueError(
             f"manuscript config 'paper.date' must be YYYY-MM-DD, got {date!r}"

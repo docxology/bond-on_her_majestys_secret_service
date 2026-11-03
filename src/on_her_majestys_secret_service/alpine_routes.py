@@ -69,7 +69,7 @@ class RoutePoint:
     northing: float
     elevation: float
 
-    def distance_to(self, other: "RoutePoint") -> float:
+    def distance_to(self, other: RoutePoint) -> float:
         """Euclidean 3-D distance to another waypoint."""
         return math.sqrt(
             (self.easting - other.easting) ** 2
