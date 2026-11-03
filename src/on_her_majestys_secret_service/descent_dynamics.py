@@ -30,6 +30,7 @@ speed, the module also pairs the descent with curve physics:
 from __future__ import annotations
 
 import math
+from itertools import pairwise
 from typing import Any, Final
 
 #: Standard gravity [m/s^2].
@@ -40,7 +41,7 @@ def _cumulative_distances(points: list[tuple[float, float, float]]) -> list[floa
     """Cumulative 3-D arc length at each waypoint (starting at 0)."""
     distances = [0.0]
     total = 0.0
-    for a, b in zip(points, points[1:]):
+    for a, b in pairwise(points):
         total += math.hypot(math.hypot(b[0] - a[0], b[1] - a[1]), b[2] - a[2])
         distances.append(total)
     return distances
@@ -165,7 +166,7 @@ def descent_simulation(
 
     # Per-segment geometry: length, sin(theta)=drop/len, cos(theta)=run/len.
     segments: list[tuple[float, float, float]] = []
-    for p, q in zip(points, points[1:]):
+    for p, q in pairwise(points):
         run = math.hypot(q[0] - p[0], q[1] - p[1])
         segment_length = math.hypot(run, q[2] - p[2])
         sin_theta = max((p[2] - q[2]) / segment_length, 0.0)  # downhill positive

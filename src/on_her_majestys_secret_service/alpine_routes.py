@@ -27,6 +27,7 @@ from __future__ import annotations
 import heapq
 import math
 from dataclasses import dataclass
+from itertools import pairwise
 from typing import Any, Final, cast
 
 __all__ = [
@@ -105,7 +106,7 @@ def straight_line_length(points: list[RoutePoint]) -> float:
     """Sum of 3-D straight-line chord lengths between consecutive waypoints."""
     if len(points) < 2:
         return 0.0
-    return sum(a.distance_to(b) for a, b in zip(points, points[1:]))
+    return sum(a.distance_to(b) for a, b in pairwise(points))
 
 
 def slope_angle(a: RoutePoint, b: RoutePoint) -> float:
