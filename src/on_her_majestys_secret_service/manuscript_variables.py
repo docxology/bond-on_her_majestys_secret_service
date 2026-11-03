@@ -40,7 +40,9 @@ def load_manuscript_config(config_path: str | Path | None = None) -> dict[str, A
     with path.open("r", encoding="utf-8") as handle:
         data = yaml.safe_load(handle)
     if not isinstance(data, dict):
-        raise ValueError(
+        # ValueError, not TypeError, is this module's documented contract for a
+        # malformed config; tests/test_manuscript_variables.py asserts it.
+        raise ValueError(  # noqa: TRY004
             f"manuscript config must be a top-level mapping, got {type(data).__name__}"
         )
     return data
@@ -86,7 +88,8 @@ def generate_variables(
     config = load_manuscript_config(config_path)
     paper = config.get("paper", {})
     if not isinstance(paper, dict):
-        raise ValueError("manuscript config 'paper' section must be a mapping")
+        # Same contract as above: a malformed config raises ValueError here.
+        raise ValueError("manuscript config 'paper' section must be a mapping")  # noqa: TRY004
 
     if require_outputs:
         results = run_scenario()
