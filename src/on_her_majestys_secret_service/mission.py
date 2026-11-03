@@ -219,7 +219,7 @@ def _input_hash() -> str:
     ).hexdigest()
 
 
-class MissionProvider(MissionProviderProtocol):  # noqa: N801 — name fixed by discovery contract
+class MissionProvider(MissionProviderProtocol):  # name fixed by discovery contract
     """Deterministic OHMSS PIZ GLORIA mission provider (protocol adapter)."""
 
     film = FILM

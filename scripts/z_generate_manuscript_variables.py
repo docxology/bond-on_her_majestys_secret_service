@@ -22,7 +22,7 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from on_her_majestys_secret_service.manuscript_variables import (  # noqa: E402
+from on_her_majestys_secret_service.manuscript_variables import (
     generate_variables,
     resolve_manuscript_tree,
 )

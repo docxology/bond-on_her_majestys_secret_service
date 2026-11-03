@@ -22,17 +22,17 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from on_her_majestys_secret_service.descent_dynamics import (  # noqa: E402
+from on_her_majestys_secret_service.descent_dynamics import (
     canonical_bobsleigh_track,
     descent_simulation,
 )
-from on_her_majestys_secret_service.figures import (  # noqa: E402
+from on_her_majestys_secret_service.figures import (
     render_descent_figure,
     render_dispersion_figure,
     render_puff_figure,
     render_route_figure,
 )
-from on_her_majestys_secret_service.mission import (  # noqa: E402
+from on_her_majestys_secret_service.mission import (
     SCENARIO,
     MissionProvider,
 )
