@@ -30,6 +30,7 @@ speed, the module also pairs the descent with curve physics:
 from __future__ import annotations
 
 import math
+from itertools import pairwise
 from typing import Any, Final
 
 #: Standard gravity [m/s^2].
@@ -40,7 +41,7 @@ def _cumulative_distances(points: list[tuple[float, float, float]]) -> list[floa
     """Cumulative 3-D arc length at each waypoint (starting at 0)."""
     distances = [0.0]
     total = 0.0
-    for a, b in zip(points, points[1:]):
+    for a, b in pairwise(points):
         total += math.hypot(math.hypot(b[0] - a[0], b[1] - a[1]), b[2] - a[2])
         distances.append(total)
     return distances
@@ -115,7 +116,9 @@ def banked_curve_max_speed(
         )
     denom = 1.0 - lateral_friction * math.tan(beta)
     if denom <= 1e-12:
-        raise ValueError("bank angle exceeds the friction-limited over-bank; denominator <= 0")
+        raise ValueError(
+            "bank angle exceeds the friction-limited over-bank; denominator <= 0"
+        )
     v_max = math.sqrt(g * radius * numerator / denom)
     return float(v_max)
 
@@ -163,7 +166,7 @@ def descent_simulation(
 
     # Per-segment geometry: length, sin(theta)=drop/len, cos(theta)=run/len.
     segments: list[tuple[float, float, float]] = []
-    for p, q in zip(points, points[1:]):
+    for p, q in pairwise(points):
         run = math.hypot(q[0] - p[0], q[1] - p[1])
         segment_length = math.hypot(run, q[2] - p[2])
         sin_theta = max((p[2] - q[2]) / segment_length, 0.0)  # downhill positive
@@ -185,8 +188,7 @@ def descent_simulation(
         while remaining > 1e-9 and steps < max_steps:
             a = G * sin_theta - friction * G * cos_theta - k * speed * speed
             new_speed = speed + a * dt
-            if new_speed < 0.0:
-                new_speed = 0.0
+            new_speed = max(new_speed, 0.0)
             # Advance the accumulated position and the segment remainder with
             # the SAME step speed (the speed at the start of the step).
             # Advancing them with different speeds let the reported distance
@@ -201,7 +203,10 @@ def descent_simulation(
             dists.append(round(s_pos, 4))
             speeds.append(round(speed, 6))
             # Capture speed whenever we pass a waypoint.
-            while waypoint_index < len(distances) and s_pos >= distances[waypoint_index] - 1e-9:
+            while (
+                waypoint_index < len(distances)
+                and s_pos >= distances[waypoint_index] - 1e-9
+            ):
                 waypoint_speeds.append(speed)
                 waypoint_index += 1
         if steps >= max_steps:
@@ -246,13 +251,19 @@ def track_curvature_audit(
     sim = descent_simulation(points, **descent_kwargs)
     radii = curve_radii(points)
     waypoint_speeds = sim["waypoint_speeds"]
-    laterals = [lateral_gaccel(waypoint_speeds[i], radii[i - 1]) for i in range(1, len(points) - 1)]
+    laterals = [
+        lateral_gaccel(waypoint_speeds[i], radii[i - 1])
+        for i in range(1, len(points) - 1)
+    ]
     return {
         "lateral_g": laterals,
         "max_lateral_g": round(max(laterals), 4) if laterals else 0.0,
         "over_g": sum(1 for v in laterals if v > max_g),
         "safe": all(v <= max_g for v in laterals),
-        "descent": {k: sim[k] for k in ("total_time_s", "max_speed_m_s", "final_speed_m_s", "completed")},
+        "descent": {
+            k: sim[k]
+            for k in ("total_time_s", "max_speed_m_s", "final_speed_m_s", "completed")
+        },
     }
 
 
@@ -265,7 +276,7 @@ def canonical_bobsleigh_track() -> list[tuple[float, float, float]]:
     """
     points: list[tuple[float, float, float]] = []
     # Long straight descent, elevation 1900 -> 1700 over 500 m plan.
-    for i in range(0, 51):
+    for i in range(51):
         points.append((i * 10.0, 0.0, 1900.0 - 200.0 * (i / 50.0)))
     # Feed into a hairpin: semicircle radius 30 m, centre (530, 30).
     cx, cy, r, z = 530.0, 30.0, 30.0, 1700.0

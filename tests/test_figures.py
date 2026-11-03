@@ -28,7 +28,9 @@ class TestDispersionFigure:
         assert path.stat().st_size > 1000
         assert path.suffix == ".png"
 
-    def test_matches_expected_name(self, tmp_path: Path, scenario: PlumeScenario) -> None:
+    def test_matches_expected_name(
+        self, tmp_path: Path, scenario: PlumeScenario
+    ) -> None:
         path = render_dispersion_figure(scenario, tmp_path / "plume.png")
         assert path.name == "plume.png"
 
@@ -63,5 +65,7 @@ class TestDescentFigure:
         assert path.stat().st_size > 1000
 
     def test_renders_with_empty_arrays(self, tmp_path: Path) -> None:
-        path = render_descent_figure({"distance": [], "speed": []}, tmp_path / "descent2.png")
+        path = render_descent_figure(
+            {"distance": [], "speed": []}, tmp_path / "descent2.png"
+        )
         assert path.exists()

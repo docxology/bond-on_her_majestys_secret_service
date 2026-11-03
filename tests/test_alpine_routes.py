@@ -51,7 +51,9 @@ class TestGeometry:
         assert slope_angle(_p(0, 0, 0), _p(100, 0, 100)) == pytest.approx(45.0)
 
     def test_curvature_straight_line_is_zero(self) -> None:
-        assert track_curvature(_p(0, 0, 0), _p(1, 0, 0), _p(2, 0, 0)) == pytest.approx(0.0)
+        assert track_curvature(_p(0, 0, 0), _p(1, 0, 0), _p(2, 0, 0)) == pytest.approx(
+            0.0
+        )
 
     def test_curvature_degenerate_triple_is_zero(self) -> None:
         assert track_curvature(_p(0, 0, 0), _p(0, 0, 0), _p(1, 0, 0)) == 0.0
@@ -115,7 +117,11 @@ class TestRouteSafetyReport:
         assert report["total_length"] > 0.0
 
     def test_counts_unsafe_segments(self) -> None:
-        points = [_p(0, 0, 0), _p(100, 0, 200), _p(200, 0, 10)]  # first seg unsafe, second near-0? no
+        points = [
+            _p(0, 0, 0),
+            _p(100, 0, 200),
+            _p(200, 0, 10),
+        ]  # first seg unsafe, second near-0? no
         report = route_safety_report(points)
         # Segment 0 rises 200 m over ~100 m chord -> unsafe; segment 1 descends.
         assert report["unsafe_segments"] >= 1
@@ -147,7 +153,9 @@ class TestPlanSafeRoute:
         def flat(_e: float, _n: float) -> float:
             return 100.0
 
-        route = plan_safe_route(start=(0, 0), goal=(3, 3), max_slope=45.0, grid=10, elevation_func=flat)
+        route = plan_safe_route(
+            start=(0, 0), goal=(3, 3), max_slope=45.0, grid=10, elevation_func=flat
+        )
         assert route["found"] is True
         # Manhattan-style shortest 8-connected path has 3 moves.
         assert len(route["path"]) == 4

@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# ruff: noqa: N999
+# The numbered name `05_debrief` is the documented phase interface (AGENTS.md,
+# README.md and the skill); renaming the file would break the documented
+# invocation, so the name is kept and the finding is ignored here.
 """Thin orchestrator: PIZ GLORIA mission phase 05 — debrief.
 
 Usage:
@@ -19,11 +23,13 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from on_her_majestys_secret_service.mission import MissionProvider  # noqa: E402
+from on_her_majestys_secret_service.mission import MissionProvider
 
 
 def main() -> int:
-    debrief = run_mission(MissionProvider(), ReconRequest(goal="debrief the PIZ GLORIA mission"))
+    debrief = run_mission(
+        MissionProvider(), ReconRequest(goal="debrief the PIZ GLORIA mission")
+    )
     print(f"Mission success: {debrief.outcome.success}")
     print(f"Lessons ({len(debrief.lessons)}):")
     for lesson in debrief.lessons:

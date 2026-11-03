@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# ruff: noqa: N999
+# The numbered name `04_execute` is the documented phase interface (AGENTS.md,
+# README.md and the skill); renaming the file would break the documented
+# invocation, so the name is kept and the finding is ignored here.
 """Thin orchestrator: PIZ GLORIA mission phase 04 — execute.
 
 Usage:
@@ -22,17 +26,17 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from on_her_majestys_secret_service.descent_dynamics import (  # noqa: E402
+from on_her_majestys_secret_service.descent_dynamics import (
     canonical_bobsleigh_track,
     descent_simulation,
 )
-from on_her_majestys_secret_service.figures import (  # noqa: E402
+from on_her_majestys_secret_service.figures import (
     render_descent_figure,
     render_dispersion_figure,
     render_puff_figure,
     render_route_figure,
 )
-from on_her_majestys_secret_service.mission import (  # noqa: E402
+from on_her_majestys_secret_service.mission import (
     SCENARIO,
     MissionProvider,
 )
@@ -74,7 +78,9 @@ def main() -> int:
         f"Isopleth reach: {disp['isopleth_reach_m']} m · peak {disp['peak_concentration_kg_m3']} "
         f"kg/m3 at {disp['peak_distance_m']} m"
     )
-    print(f"Puff arrival at {puff['arrival_time_s']} s · peak {puff['peak_concentration_kg_m3']} kg/m3")
+    print(
+        f"Puff arrival at {puff['arrival_time_s']} s · peak {puff['peak_concentration_kg_m3']} kg/m3"
+    )
     print(
         f"Alpine route: found={alpine['route_found']} distance={alpine['route_distance_m']} m "
         f"mean_grade={alpine['route_mean_grade_deg']} deg safe={alpine['route_safe']}"

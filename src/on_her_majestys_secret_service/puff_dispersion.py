@@ -76,13 +76,15 @@ def single_puff(
         return 0.0
     exp_x = math.exp(-(dx * dx) / (2.0 * sigma_h * sigma_h))
     exp_y = math.exp(-(dy * dy) / (2.0 * sigma_h * sigma_h))
-    exp_z = math.exp(-((z_r - release_height) ** 2) / (2.0 * sigma_z * sigma_z)) + math.exp(
-        -((z_r + release_height) ** 2) / (2.0 * sigma_z * sigma_z)
-    )
+    exp_z = math.exp(
+        -((z_r - release_height) ** 2) / (2.0 * sigma_z * sigma_z)
+    ) + math.exp(-((z_r + release_height) ** 2) / (2.0 * sigma_z * sigma_z))
     return float(mass / denom * exp_x * exp_y * exp_z)
 
 
-def _puff_sigmas(travel_distance: float, stability: str, initial_sigma: float) -> tuple[float, float]:
+def _puff_sigmas(
+    travel_distance: float, stability: str, initial_sigma: float
+) -> tuple[float, float]:
     """Horizontal/vertical puff spread at a travel distance, floored at the initial size."""
     sy, sz = pasquill_sigma(max(travel_distance, 0.0), stability)
     return max(float(sy), initial_sigma), max(float(sz), initial_sigma)
@@ -132,7 +134,7 @@ def puff_field_time_series(
 
     times: list[float] = []
     concentrations: list[float] = []
-    n = int(round((t_end - t_start) / dt))
+    n = round((t_end - t_start) / dt)
     for k in range(n + 1):
         t_obs = t_start + k * dt
         total = 0.0

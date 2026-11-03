@@ -38,7 +38,7 @@ class TestTimelineEvent:
 
 class TestTimeline:
     def test_total_observed_minutes(self) -> None:
-        claims, obs = canonical_timeline()
+        _claims, obs = canonical_timeline()
         assert total_observed_minutes(obs) == pytest.approx(360.0)
         assert total_observed_minutes([]) == 0.0
 
@@ -47,7 +47,7 @@ class TestTimeline:
         assert matched_minutes(claims, obs) == pytest.approx(280.0)
 
     def test_matched_minutes_no_claims(self) -> None:
-        claims, obs = canonical_timeline()
+        _claims, obs = canonical_timeline()
         assert matched_minutes((), obs) == 0.0
 
     def test_overlapping_same_location_claims_are_not_double_counted(self) -> None:

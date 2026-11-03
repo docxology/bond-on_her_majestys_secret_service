@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# ruff: noqa: N999
+# The numbered name `03_plan` is the documented phase interface (AGENTS.md,
+# README.md and the skill); renaming the file would break the documented
+# invocation, so the name is kept and the finding is ignored here.
 """Thin orchestrator: PIZ GLORIA mission phase 03 — plan.
 
 Usage:
@@ -17,7 +21,7 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from on_her_majestys_secret_service.mission import MissionProvider  # noqa: E402
+from on_her_majestys_secret_service.mission import MissionProvider
 
 
 def main() -> int:

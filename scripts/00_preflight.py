@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# ruff: noqa: N999
+# The numbered name `00_preflight` is the documented phase interface (AGENTS.md,
+# README.md and the skill); renaming the file would break the documented
+# invocation, so the name is kept and the finding is ignored here.
 """Thin orchestrator: PIZ GLORIA preflight / environment verification.
 
 Usage:
@@ -19,8 +23,9 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-import bond_api  # noqa: E402
-from on_her_majestys_secret_service.mission import CODENAME, FILM, MissionProvider  # noqa: E402
+import bond_api
+
+from on_her_majestys_secret_service.mission import CODENAME, FILM, MissionProvider
 
 
 def main() -> int:
@@ -31,7 +36,9 @@ def main() -> int:
     print(f"Python {platform.python_version()} on {platform.platform()}")
     print(f"Objectives ({len(brief.objectives)}): {', '.join(brief.objectives)}")
     print(f"Assets ({len(brief.assets)}): {', '.join(a.name for a in brief.assets)}")
-    print(f"Constraints ({len(brief.constraints)}): {', '.join(c.kind for c in brief.constraints)}")
+    print(
+        f"Constraints ({len(brief.constraints)}): {', '.join(c.kind for c in brief.constraints)}"
+    )
     return 0
 
 

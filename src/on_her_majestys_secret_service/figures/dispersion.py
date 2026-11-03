@@ -13,13 +13,13 @@ import matplotlib
 
 matplotlib.use("Agg")
 
-import matplotlib.pyplot as plt  # noqa: E402
+import matplotlib.pyplot as plt
 
-from on_her_majestys_secret_service.dispersion_model import (  # noqa: E402
+from on_her_majestys_secret_service.dispersion_model import (
     PlumeScenario,
     downwind_axis,
 )
-from on_her_majestys_secret_service.puff_dispersion import puff_field_time_series  # noqa: E402
+from on_her_majestys_secret_service.puff_dispersion import puff_field_time_series
 
 __all__ = [
     "render_descent_figure",

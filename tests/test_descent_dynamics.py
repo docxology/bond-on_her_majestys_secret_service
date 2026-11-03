@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import math
+from itertools import pairwise
 
 import pytest
 
@@ -165,6 +166,6 @@ class TestDescentDistance:
         bug cannot return undetected.
         """
         track = canonical_bobsleigh_track()
-        arc = sum(math.dist(a, b) for a, b in zip(track, track[1:]))
+        arc = sum(math.dist(a, b) for a, b in pairwise(track))
         sim = descent_simulation(track)
         assert sim["total_distance_m"] == pytest.approx(arc, rel=1e-6)
