@@ -108,12 +108,13 @@ delegate the persisted record. Note the constraint: that helper defaults `starte
 ## Verification
 
 ```bash
-uv sync --extra dev   # resolves the local ../bond-api path dependency
+uv sync --extra dev   # resolves bond-api from the recorded copy at vendor/bond-api
 
-uv run pytest tests/ --cov=src --cov-fail-under=90   # expect 205 passed, 97.84%
+uv run pytest tests/ --cov=src --cov-fail-under=90   # expect 206 passed, 97.84%
 uv run ruff check src/ scripts/ tests/
-uv run ruff format --check src/ scripts/ tests/
-uv run mypy src/ scripts/                            # expect clean, 19 files
+uv run ruff format --check src/ scripts/ tests/      # expect 35 files already formatted
+uv run mypy src/ scripts/                            # expect clean, 20 files
+uv run python scripts/vendor.py --check               # expect ok, 0 finding(s)
 ```
 
 The fleet-level gates (`_phase_aggregate_gate.sh`, `_phase_docs_gate.py`, `_phase_lint_sweep.sh`,
@@ -190,3 +191,56 @@ resolve from the executed mission (strict mode).
   closed).
 - **V1** adversarial audit remains partial: this re-review was inline by the
   same improvement agent, not an independent skeptic.
+
+## Vendoring wave (2026-11-04)
+
+`bond-api` was resolved from a sibling checkout (`../bond-api`), so a clone of
+this repository resolved nothing: in a sibling-free export `uv sync --extra dev`
+cannot find the distribution, and `uv lock --check` is rc=1 against the
+committed lock. The upstream bytes are now recorded at `vendor/bond-api` with
+`PROVENANCE.json` (upstream commit `c0362ff0c9d7`, a sha256 per copied file) and
+`VENDOR.md`; `[tool.uv.sources]` points at the copy, `uv.lock` was regenerated
+from that declaration (two runs byte-identical, two moved lines, `--refresh`
+unchanged, no `../bond-api` left), and `scripts/vendor.py --check` verifies it
+offline — inside the suite too, via `tests/test_vendor_provenance.py`.
+Measured at the pre-change head `4ba4863`: lock/sync rc=0, **205 passed**,
+97.84% (837 statements / 276 branches, 11 missed lines, 13 partial branches),
+`ruff check` and `ruff format --check` clean (33 files), whole-tree ruff clean
+both ways (57 files formatted), `mypy src/ scripts/` clean in 19 files, the
+preflight, five phase CLIs and the token generator all rc=0, two consecutive
+regenerations byte-identical (`5f84cbcca5832a09`), the lineage audit clean in
+code/config. All 16 patch blobs match their recorded post-images and the payload
+is byte-equal to upstream on all ten copied paths.
+
+**W1 — "Inherits workspace settings from root pyproject.toml" was false, and
+the new table now decides.** No `pyproject.toml` above this package declares a
+`[tool.ruff]` table, so nothing was inherited: the effective configuration was
+ruff's default (`--show-settings` reported `line_length = 88`). The `[tool.ruff]`
+table this change creates is the effective configuration from now on; its
+comment states the measured width and both arms were taken with the table in
+this file and only its body varying. Arm A (as committed: the exclusion alone):
+`ruff format --check src/ scripts/ tests/` reports 35 files already formatted,
+`ruff check` is clean, whole-tree format 59 files. Arm B (adding
+`line-length = 120` to that same table): `--show-settings` reports 120 and
+**21** scoped files would be reformatted — so the width comes from this file,
+and 88 is the width this tree is written to, not one it inherited.
+
+**W2 — the generator's record for this repository says no lock patch was
+applied; the live head's lock still needed one.** The vendoring receipt carries
+`lock_patch_sha256: "none"` and `lock_patch_applied: false` with
+`baseline_tree == head_tree`, which reads as "this repository's lock needed no
+change". On the live head it did: `uv.lock` declared
+`source = { directory = "../bond-api" }`, and after applying the patch
+`uv lock --check` was rc=1. The two-line update was applied and measured
+(rc=0; two consecutive `uv lock` runs byte-identical `0f97162dab92b001`;
+`--refresh` leaves the file untouched; zero `../bond-api` references left).
+Recorded here so the receipt is not read as "nothing to do".
+
+**W3 — the verification expectations were re-dated, not corrected.** The
+pre-change head *did* measure 205 passed at 97.84% with `mypy` clean in 19
+files, exactly as this file said; the vendoring adds the provenance test and
+`scripts/vendor.py`, so the block now reads 206 passed, 97.84% unchanged, 35
+files formatted, and 20 mypy source files, beside the new recorded-copy gate.
+The lineage audit's scope is honest and was measured in both scopes: rc=1 with
+0 hits in code/config/data (its stated scope) *and* 0 hits in prose, so
+`Clean` is reachable and nothing was hidden by the glob list.

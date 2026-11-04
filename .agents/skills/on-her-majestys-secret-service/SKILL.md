@@ -35,7 +35,7 @@ codename PIZ GLORIA. Scope = this directory only; path-scoped commits, and
 ## Quick reference
 
 ```bash
-uv sync --extra dev   # resolves the local ../bond-api path dependency
+uv sync --extra dev   # resolves bond-api from the recorded copy at vendor/bond-api
 uv run python -m pytest tests/ --cov=src --cov-fail-under=90
 uv run ruff check src/ scripts/ tests/ && uv run ruff format --check src/ scripts/ tests/
 uv run mypy src/ scripts/

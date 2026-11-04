@@ -6,7 +6,10 @@ agents working inside `on_her_majestys_secret_service`.
 ## Hard rules
 
 1. **Scope**: work only inside this directory. Do not modify sibling BOND
-   packages, bond root files, or the parent template repo.
+   packages, bond root files, or the parent template repo. The one suite
+   dependency this package consumes is the recorded copy at `vendor/bond-api`,
+   which belongs to this repository and is refreshed by `scripts/vendor.py`,
+   never by hand.
 2. **Published repo**: `origin` is the GitHub repo. Commit path-scoped
    (`git add -A` inside this repo only) and never force-push or rewrite
    history.
