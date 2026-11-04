@@ -5,8 +5,9 @@
 
 ## Rules
 
-- **The numbering is the mission order.** Preflight checks the environment and the sibling
-  `bond-api` path dependency first; running a later step against an unprepared environment
+- **The numbering is the mission order.** Preflight checks the environment and the `bond-api`
+  protocol — resolved from the recorded copy at `vendor/bond-api`, not a sibling checkout —
+  first; running a later step against an unprepared environment
   produces a failure that looks like a domain bug.
 - **Thin CLIs only**: argument parsing, printing and file writing, with a `sys.path` bootstrap.
   Business logic lives in `src/on_her_majestys_secret_service/`.

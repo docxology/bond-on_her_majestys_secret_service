@@ -46,8 +46,9 @@ the path dependency never blocks the pure science.
 (module top level) implementing `brief / recon / plan / execute / debrief`
 with the frozen `bond_api` dataclasses. It registers gadgets (dispersion, puff,
 alpine planner, descent, bobsleigh audit, cover risk, timeline verifier) into a
-`GadgetRegistry`. `pyproject.toml` declares the local path dependency:
-`bond-api = { path = ".../bond/bond-api" }` under `[tool.uv.sources]`. Run
+`GadgetRegistry`. `pyproject.toml` declares the dependency as a recorded copy
+inside this repository: `bond-api = { path = "vendor/bond-api" }` under
+`[tool.uv.sources]`, verified by `scripts/vendor.py --check`. Run
 `uv sync --extra dev` before `pytest`.
 
 ## Verification (before done)
@@ -56,6 +57,7 @@ alpine planner, descent, bobsleigh audit, cover risk, timeline verifier) into a
 uv run python -m pytest tests/ --cov=src --cov-fail-under=90 -q
 uv run ruff check src/ scripts/ tests/ && uv run ruff format --check src/ scripts/ tests/
 uv run mypy src/ scripts/
+uv run python scripts/vendor.py --check   # recorded copy matches PROVENANCE.json
 # lineage: no exemplar strings in code, config or data; prose may name the check
 rg -n "template_?" . --glob '*.py' --glob '*.yaml' --glob '*.yml' --glob '*.json' --glob '*.toml' --glob '!.git/**' || echo Clean
 git status --short   # clean after commit

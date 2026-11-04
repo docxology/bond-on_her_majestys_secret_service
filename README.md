@@ -69,8 +69,10 @@ uv run python scripts/z_generate_manuscript_variables.py   # hydrate tokens
 ```
 
 Published at `github.com/docxology/bond-on_her_majestys_secret_service` (the
-`origin` remote). The BOND package family is checked out side by side, so the
-`../bond-api` path dependency resolves without a separate install step.
+`origin` remote). The `bond-api` protocol it consumes is recorded inside this
+repository at `vendor/bond-api`, so `uv sync --extra dev` resolves the
+dependency from the clone itself, with no sibling checkout and no separate
+install step.
 
 ## Integration
 
