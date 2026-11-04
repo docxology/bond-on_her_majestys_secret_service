@@ -244,3 +244,8 @@ files formatted, and 20 mypy source files, beside the new recorded-copy gate.
 The lineage audit's scope is honest and was measured in both scopes: rc=1 with
 0 hits in code/config/data (its stated scope) *and* 0 hits in prose, so
 `Clean` is reachable and nothing was hidden by the glob list.
+
+A sweep for the literal `../bond-api` now hits only this section's own record of
+the defect and one docstring in `scripts/vendor.py` (which names the sibling
+source it rewrites); there is no other copy left in the tree, so no document
+audit is re-created by these rows.
