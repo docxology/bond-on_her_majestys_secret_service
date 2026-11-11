@@ -249,3 +249,7 @@ A sweep for the literal `../bond-api` now hits only this section's own record of
 the defect and one docstring in `scripts/vendor.py` (which names the sibling
 source it rewrites); there is no other copy left in the tree, so no document
 audit is re-created by these rows.
+
+## Workflowz review — 2026-11-10
+
+No new concrete, independently closable improvement survived this bounded review. Coverage included the supplied project guidance, README/TODO, Python and dependency declarations, package exports, figure rendering, cover-risk scoring, puff dispersion, and manuscript-variable hydration. The `require_outputs=False` `N/A` path is an explicit draft mode rather than a silent production substitute; no unsupported runtime upgrade or keyword-only finding is proposed. Re-review on a concrete correctness failure or a relevant source/configuration change, with exact evidence for the affected behavior.
