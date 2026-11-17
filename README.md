@@ -8,6 +8,30 @@ riding a bobsleigh-grade safe exfiltration line (slope safety, descent
 kinetics, banked-curve clearance), and holding the *Bray* cover identity
 (weighted risk scoring *and* timeline verification).
 
+## Mission model
+
+```mermaid
+flowchart TD
+    accTitle: PIZ GLORIA implemented mission analyses
+    accDescr: Release weather, alpine track and cover-identity evidence feed Steady plume and time-resolved puff dispersion; Slope-safe routes and descent dynamics; Cover risk and timeline consistency. The mission adapter returns dispersion, exfiltration and cover-consistency assessments with provenance, then a debrief.
+    I["Release weather, alpine track and cover-identity evidence"]
+    G0["Steady plume and time-resolved puff dispersion"]
+    I --> G0
+    G1["Slope-safe routes and descent dynamics"]
+    I --> G1
+    G2["Cover risk and timeline consistency"]
+    I --> G2
+    O["mission.py: execute returns MissionOutcome<br/>Dispersion, exfiltration and cover-consistency assessments and provenance"]
+    G0 --> O
+    G1 --> O
+    G2 --> O
+    O --> F["debrief: mission summary"]
+```
+
+The branches group implemented capabilities; they do not imply a runtime order.
+
+**Source map:** [`dispersion_model.py`](src/on_her_majestys_secret_service/dispersion_model.py), [`puff_dispersion.py`](src/on_her_majestys_secret_service/puff_dispersion.py); [`alpine_routes.py`](src/on_her_majestys_secret_service/alpine_routes.py), [`descent_dynamics.py`](src/on_her_majestys_secret_service/descent_dynamics.py); [`cover_identity.py`](src/on_her_majestys_secret_service/cover_identity.py), [`identity_timeline.py`](src/on_her_majestys_secret_service/identity_timeline.py); [`mission.py`](src/on_her_majestys_secret_service/mission.py).
+
 The package implements the frozen `bond_api` `MissionProvider` protocol and is
 discoverable by any BOND coordinator by its slug
 `on_her_majestys_secret_service`.
