@@ -11,6 +11,7 @@ authoritative scope/quality-gate contract for the whole package.
 | File | Owns | Update when |
 | --- | --- | --- |
 | `README.md` | Index of this directory | A file is added to or removed from `docs/` |
+| [Package maintenance](package-maintenance.md) | Vendored dependency and documentation checks | Dependency provenance instructions change |
 | `agent_instructions.md` | Hard operational rules (scope, determinism, no-mocks, coverage, layer contract, protocol stability) | A guardrail changes at the package-root `AGENTS.md` level — keep the two in sync |
 | `architecture.md` | The real module graph: every file under `src/on_her_majestys_secret_service/`, what it computes, and the dependency direction between domain / adapter / presentation / scripts | A module is added, renamed, or its dependency edges change |
 | `testing_philosophy.md` | Per-module test-suite intent (what each `test_*.py` file actually asserts, not just its name) | A test file is added, split, or its coverage focus changes |
