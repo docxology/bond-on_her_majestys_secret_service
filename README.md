@@ -8,6 +8,8 @@ riding a bobsleigh-grade safe exfiltration line (slope safety, descent
 kinetics, banked-curve clearance), and holding the *Bray* cover identity
 (weighted risk scoring *and* timeline verification).
 
+See [package maintenance](docs/package-maintenance.md) for dependency and metadata checks.
+
 ## Mission model
 
 ```mermaid

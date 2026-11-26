@@ -11,3 +11,5 @@ Agent-facing documentation for this BOND film package:
 * `_generated/COUNTS.md` — live test count and coverage percentage; never
   hand-edit, regenerate from a real pytest run.
 * `README.md` — this index.
+
+[Package maintenance](package-maintenance.md) covers dependency and metadata checks.
