@@ -1,5 +1,8 @@
 # on_her_majestys_secret_service — PIZ GLORIA
 
+See [package maintenance](docs/package-maintenance.md) for the package
+version, Python selection, and dependency provenance.
+
 A PROJECT BOND film package drawn from **On Her Majesty's Secret Service**
 (1969), mission codename **PIZ GLORIA**. It implements special-agent mission
 software for an alpine operation: modeling the aerosol bioweapon (allergen)

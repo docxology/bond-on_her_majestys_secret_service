@@ -1,5 +1,9 @@
 # Verify the vendored BOND-API dependency
 
+This checkout is `on_her_majestys_secret_service` 0.1.0. The declared Python
+range is `>=3.11`; [`.python-version`](../.python-version) selects
+Python 3.15 for the checkout.
+
 This checkout delegates its software interface to a recorded BOND-API copy.
 [`pyproject.toml`](../pyproject.toml) points to [`vendor/bond-api/`](../vendor/bond-api/),
 and [`PROVENANCE.json`](../vendor/bond-api/PROVENANCE.json) records the upstream

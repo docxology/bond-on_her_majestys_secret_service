@@ -1,5 +1,8 @@
 # AGENTS.md — PIZ GLORIA (on_her_majestys_secret_service)
 
+See [package maintenance](docs/package-maintenance.md) for the package
+version, Python selection, and dependency provenance.
+
 This is a PROJECT BOND film package (mission codename **PIZ GLORIA**, from
 *On Her Majesty's Secret Service*, 1969) converted from the template exemplar
 scaffold. It implements a `MissionProvider` against the frozen `bond_api`
